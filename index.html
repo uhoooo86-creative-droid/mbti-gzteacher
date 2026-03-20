@@ -4,38 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Big Cat JukeBox</title>
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;700;900&family=Jua&family=Do+Hyeon&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════
-   BIG CAT BRAND PALETTE
-   황금(黃金) + 흑(黑) + 빨강(赤)
-   오방색 per teacher
-═══════════════════════════════ */
 :root {
-  /* Brand */
-  --gold:    #F5B800;
-  --gold-l:  #FFD84D;
-  --gold-d:  #B88200;
-  --red:     #E8231A;
-  --black:   #111111;
-  --white:   #FAFAF5;
-  --ink:     #1A1A1A;
+  --gold:   #F5B800;
+  --gold-d: #B88200;
+  --gold-l: #FFD84D;
+  --red:    #E8231A;
+  --black:  #111;
+  --white:  #FAFAF5;
 
-  /* Obangsaek */
-  --cheong:  #1A6FFF;
-  --jeok:    #E8231A;
-  --hwang:   #F5B800;
-  --baek:    #F0EBE0;
-  --heuk:    #1A1A1A;
+  --cheong: #1A6FFF;
+  --jeok:   #FF2D1A;
+  --hwang:  #FFB800;
+  --baek:   #f0ebe0;
+  --heuk:   #1a1a1a;
 
-  /* UI */
-  --surface: #1C1A14;
-  --card:    #242018;
-  --border:  rgba(245,184,0,0.2);
-
-  --font-display: 'Jua', 'Black Han Sans', sans-serif;
-  --font-body:    'Gaegu', 'Noto Sans KR', sans-serif;
-  --font-hand:    'Gaegu', cursive;
+  --fd: 'Jua', sans-serif;
+  --fb: 'Gaegu', 'Noto Sans KR', sans-serif;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -44,746 +30,415 @@ html { scroll-behavior:smooth; }
 body {
   background: var(--black);
   color: var(--white);
-  font-family: var(--font-body);
-  min-height: 100vh;
-  overflow-x: hidden;
-  transition: background 0.6s ease;
+  font-family: var(--fb);
+  min-height:100vh;
+  overflow-x:hidden;
+  transition: background 0.5s ease;
 }
 
-/* theme body classes */
+body::after {
+  content:''; position:fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:9998;
+}
+
 body.t-cheong { background:#001888; }
 body.t-jeok   { background:#880000; }
 body.t-hwang  { background:#885500; }
 body.t-baek   { background:#6a6660; }
-body.t-heuk   { background:#000000; }
+body.t-heuk   { background:#000; }
 
-/* ── GRAIN OVERLAY ── */
-body::after {
-  content:'';
-  position:fixed; inset:0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events:none; z-index:9998; opacity:0.5;
-}
-
-/* ════════════════════════════════
-   SCREENS
-════════════════════════════════ */
 .screen { display:none; min-height:100vh; }
 .screen.active { display:flex; flex-direction:column; }
 
-/* ════════════════════════════════
-   SCREEN 1 — INTRO (밝은 흰/빨/노 스타일)
-════════════════════════════════ */
+/* ══ SCREEN 1: INTRO ══ */
 #screen-intro {
   align-items:center;
   justify-content:flex-start;
-  padding: 20px 16px 24px;
-  position:relative;
-  overflow:hidden;
+  padding: 18px 14px 20px;
   background: linear-gradient(160deg, #fff8f0 0%, #fff 40%, #fff5f5 70%, #fffbe6 100%);
   color: #1a1a1a;
-  min-height: 100vh;
+  position:relative; overflow:hidden;
 }
-
-/* dot pattern bg */
 #screen-intro::before {
-  content:'';
-  position:absolute; inset:0;
-  background-image: radial-gradient(circle, rgba(232,35,26,0.06) 1px, transparent 1px);
-  background-size: 28px 28px;
-  pointer-events:none; z-index:0;
+  content:''; position:absolute; inset:0;
+  background-image: radial-gradient(circle, rgba(232,35,26,0.05) 1px, transparent 1px);
+  background-size: 24px 24px; pointer-events:none; z-index:0;
 }
 
 .intro-inner {
   position:relative; z-index:1;
-  width:100%; max-width:620px;
-  text-align:center;
-  margin:0 auto;
+  width:100%; max-width:600px; margin:0 auto; text-align:center;
 }
 
-/* Logo area */
-.bigcat-logo-wrap {
+/* Logo */
+.logo-row {
   display:flex; align-items:center; justify-content:center;
-  gap:10px; margin-bottom:4px;
-  animation: fadeUp 0.6s ease both;
+  gap:10px; margin-bottom:3px;
+  animation: fadeUp 0.5s ease both;
 }
-.logo-cat-svg {
-  width:44px; height:44px;
-  filter: drop-shadow(2px 4px 0px rgba(200,0,0,0.3));
-  animation: catBounce 3s ease-in-out infinite;
-}
-@keyframes catBounce {
-  0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)}
-}
+.logo-svg { width:46px; height:46px; filter:drop-shadow(2px 3px 0 rgba(200,0,0,0.25)); animation:bounce 3s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
 
-.brand-name {
-  font-family: var(--font-display);
-  font-size: clamp(2rem,7vw,3.2rem);
+.brand-title {
+  font-family: var(--fd);
+  font-size: clamp(1.9rem,7vw,3rem);
   color: var(--red);
   line-height:1;
-  text-shadow: 2px 2px 0 #b01010, 4px 4px 0 rgba(180,0,0,0.2);
-  animation: fadeUp 0.6s 0.08s ease both;
-  letter-spacing:1px;
+  text-shadow: 2px 2px 0 #900, 4px 4px 0 rgba(180,0,0,0.15);
+  animation: fadeUp 0.5s 0.07s ease both;
 }
-.brand-sub {
-  font-family: var(--font-display);
-  font-size:clamp(0.7rem,2vw,0.95rem);
+.brand-bigcat {
+  font-family: var(--fd);
+  font-size: clamp(0.65rem,1.8vw,0.85rem);
   color: var(--gold-d);
-  letter-spacing:8px;
-  text-shadow: 1px 2px 0 rgba(180,120,0,0.3);
-  animation: fadeUp 0.6s 0.12s ease both;
+  letter-spacing:8px; text-transform:uppercase;
+  text-shadow:1px 1px 0 rgba(150,100,0,0.3);
+  animation: fadeUp 0.5s 0.1s ease both;
   margin-bottom:2px;
-  text-transform:uppercase;
+}
+.brand-tag {
+  font-family: var(--fb);
+  font-size:0.82rem; color:rgba(100,60,60,0.5);
+  margin-bottom:12px;
+  animation: fadeUp 0.5s 0.13s ease both;
 }
 
-.brand-tagline {
-  font-family: var(--font-hand);
-  font-size:0.88rem;
-  color:rgba(100,60,60,0.55);
-  margin-bottom:14px;
-  animation: fadeUp 0.6s 0.16s ease both;
-}
-
-/* obangsaek dots */
+/* dots */
 .ob-row {
-  display:flex; justify-content:center; gap:8px;
-  margin-bottom:14px;
-  animation: fadeUp 0.6s 0.2s ease both;
+  display:flex; justify-content:center; gap:7px;
+  margin-bottom:12px;
+  animation: fadeUp 0.5s 0.16s ease both;
 }
 .ob-dot {
-  width:9px; height:9px; border-radius:50%;
-  animation: obPop 2.4s ease-in-out infinite;
-  box-shadow:0 2px 4px rgba(0,0,0,0.12);
+  width:8px; height:8px; border-radius:50%;
+  box-shadow:0 1px 4px rgba(0,0,0,0.12);
+  animation: obPop 2.2s ease-in-out infinite;
 }
 .ob-dot:nth-child(1){background:var(--cheong);animation-delay:0s}
-.ob-dot:nth-child(2){background:var(--jeok);animation-delay:0.2s}
-.ob-dot:nth-child(3){background:var(--hwang);animation-delay:0.4s}
-.ob-dot:nth-child(4){background:#888;animation-delay:0.6s}
-.ob-dot:nth-child(5){background:#333;animation-delay:0.8s}
-@keyframes obPop {
-  0%,100%{transform:scale(1);opacity:0.65} 50%{transform:scale(1.8);opacity:1}
-}
+.ob-dot:nth-child(2){background:var(--jeok);animation-delay:0.18s}
+.ob-dot:nth-child(3){background:var(--hwang);animation-delay:0.36s}
+.ob-dot:nth-child(4){background:#888;animation-delay:0.54s}
+.ob-dot:nth-child(5){background:#222;animation-delay:0.72s}
+@keyframes obPop { 0%,100%{transform:scale(1);opacity:0.6} 50%{transform:scale(1.8);opacity:1} }
 
 .intro-q {
-  font-family: var(--font-display);
-  font-size:clamp(1rem,3.2vw,1.3rem);
-  color:#1a1a1a;
-  margin-bottom:14px;
-  animation: fadeUp 0.6s 0.24s ease both;
+  font-family: var(--fd);
+  font-size: clamp(0.95rem,3vw,1.25rem);
+  color:#1a1a1a; margin-bottom:12px;
+  animation: fadeUp 0.5s 0.19s ease both;
 }
 
-/* ── TEACHER CARDS — bright white with colored accents ── */
+/* ── Teacher Cards ── */
 .tc-grid {
-  display:grid;
-  grid-template-columns: repeat(5,1fr);
-  gap:6px;
-  margin-bottom:14px;
-  animation: fadeUp 0.6s 0.3s ease both;
-  width:100%;
-}
-/* always 5 columns even on small screens */
-@media(max-width:500px){
-  .tc-grid { grid-template-columns: repeat(5,1fr); gap:5px; }
+  display:grid; grid-template-columns:repeat(5,1fr);
+  gap:5px; margin-bottom:12px;
+  animation: fadeUp 0.5s 0.23s ease both;
 }
 
 .tc-card {
-  border-radius:14px;
-  padding:12px 4px 10px;
-  cursor:pointer;
-  border: 2px solid transparent;
-  position:relative; overflow:hidden;
-  text-align:center;
-  transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
-  color:#fff;
+  border-radius:12px; padding:10px 4px 9px;
+  cursor:pointer; border:2px solid transparent;
+  text-align:center; color:#fff;
+  transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
 }
-.tc-card::before { display:none; }
+.tc-card[data-t="1"]{background:linear-gradient(160deg,#1A6FFF,#0044cc);box-shadow:0 4px 0 #002fa3,0 6px 16px rgba(26,111,255,0.3);}
+.tc-card[data-t="2"]{background:linear-gradient(160deg,#FF2D1A,#cc1a0a);box-shadow:0 4px 0 #8a0500,0 6px 16px rgba(255,45,26,0.35);}
+.tc-card[data-t="3"]{background:linear-gradient(160deg,#FFB800,#e09000);box-shadow:0 4px 0 #a06000,0 6px 16px rgba(255,184,0,0.35);color:#1a1a1a;}
+.tc-card[data-t="4"]{background:linear-gradient(160deg,#f0ebe0,#d0c8b0);box-shadow:0 4px 0 #a09880,0 6px 16px rgba(0,0,0,0.12);color:#3a3020;}
+.tc-card[data-t="5"]{background:linear-gradient(160deg,#2a2a2a,#111);box-shadow:0 4px 0 #000,0 6px 16px rgba(0,0,0,0.4);}
 
-/* vivid obangsaek backgrounds */
-.tc-card[data-t="1"] { background: linear-gradient(160deg,#1A6FFF,#0044cc); box-shadow:0 5px 0 #002fa3, 0 8px 24px rgba(26,111,255,0.35); border-color:rgba(255,255,255,0.2); }
-.tc-card[data-t="2"] { background: linear-gradient(160deg,#FF2D1A,#cc1a0a); box-shadow:0 5px 0 #8a0500, 0 8px 24px rgba(255,45,26,0.4); border-color:rgba(255,255,255,0.2); }
-.tc-card[data-t="3"] { background: linear-gradient(160deg,#FFB800,#e09000); box-shadow:0 5px 0 #a06000, 0 8px 24px rgba(255,184,0,0.4); border-color:rgba(255,255,255,0.2); color:#1a1a1a; }
-.tc-card[data-t="4"] { background: linear-gradient(160deg,#f0ebe0,#d8d0be); box-shadow:0 5px 0 #a09880, 0 8px 24px rgba(0,0,0,0.15); border-color:rgba(0,0,0,0.08); color:#3a3020; }
-.tc-card[data-t="5"] { background: linear-gradient(160deg,#2a2a2a,#111); box-shadow:0 5px 0 #000, 0 8px 24px rgba(0,0,0,0.4); border-color:rgba(255,255,255,0.1); }
+.tc-card:hover { transform:translateY(-4px) scale(1.04); }
+.tc-card.selected { transform:translateY(-6px) scale(1.06); }
+.tc-card[data-t="1"].selected{box-shadow:0 8px 0 #002fa3,0 14px 28px rgba(26,111,255,0.55);}
+.tc-card[data-t="2"].selected{box-shadow:0 8px 0 #8a0500,0 14px 28px rgba(255,45,26,0.6);}
+.tc-card[data-t="3"].selected{box-shadow:0 8px 0 #a06000,0 14px 28px rgba(255,184,0,0.6);}
+.tc-card[data-t="4"].selected{box-shadow:0 8px 0 #a09880,0 14px 28px rgba(0,0,0,0.2);}
+.tc-card[data-t="5"].selected{box-shadow:0 8px 0 #000,0 14px 28px rgba(0,0,0,0.55);}
 
-.tc-card:hover { transform:translateY(-6px) scale(1.05); }
-.tc-card[data-t="1"]:hover { box-shadow:0 10px 0 #002fa3, 0 16px 36px rgba(26,111,255,0.5); }
-.tc-card[data-t="2"]:hover { box-shadow:0 10px 0 #8a0500, 0 16px 36px rgba(255,45,26,0.55); }
-.tc-card[data-t="3"]:hover { box-shadow:0 10px 0 #a06000, 0 16px 36px rgba(255,184,0,0.55); }
-.tc-card[data-t="4"]:hover { box-shadow:0 10px 0 #a09880, 0 16px 36px rgba(0,0,0,0.2); }
-.tc-card[data-t="5"]:hover { box-shadow:0 10px 0 #000, 0 16px 36px rgba(0,0,0,0.5); }
-
-.tc-card.selected { transform:translateY(-8px) scale(1.07); }
-.tc-card[data-t="1"].selected { box-shadow:0 12px 0 #002fa3, 0 20px 48px rgba(26,111,255,0.6); }
-.tc-card[data-t="2"].selected { box-shadow:0 12px 0 #8a0500, 0 20px 48px rgba(255,45,26,0.65); }
-.tc-card[data-t="3"].selected { box-shadow:0 12px 0 #a06000, 0 20px 48px rgba(255,184,0,0.65); }
-.tc-card[data-t="4"].selected { box-shadow:0 12px 0 #a09880, 0 20px 48px rgba(0,0,0,0.25); }
-.tc-card[data-t="5"].selected { box-shadow:0 12px 0 #000, 0 20px 48px rgba(0,0,0,0.6); }
-
-/* color dot (replaces hanja) */
-.tc-color-dot {
-  width:28px; height:28px; border-radius:50%;
-  margin:0 auto 7px;
-  background:rgba(255,255,255,0.25);
-  border:2px solid rgba(255,255,255,0.5);
-  display:flex; align-items:center; justify-content:center;
-  font-size:0.85rem;
-  box-shadow:0 2px 6px rgba(0,0,0,0.18);
-  transition:transform 0.2s;
+.tc-icon { font-size:1.1rem; margin-bottom:4px; display:block; transition:transform 0.2s; }
+.tc-card:hover .tc-icon { transform:scale(1.18); }
+.tc-type {
+  font-size:0.48rem; letter-spacing:1.5px; font-weight:700;
+  color:rgba(255,255,255,0.7); text-transform:uppercase;
+  font-family:var(--fb); margin-bottom:2px; display:block;
 }
-.tc-card:hover .tc-color-dot { transform:scale(1.15); }
-.tc-card[data-t="4"] .tc-color-dot { background:rgba(0,0,0,0.08); border-color:rgba(0,0,0,0.15); }
-.tc-card[data-t="5"] .tc-color-dot { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.2); }
-
-.tc-mbti {
-  position:relative; z-index:1;
-  font-size:0.5rem; letter-spacing:1.5px;
-  color:rgba(255,255,255,0.75); margin-bottom:3px;
-  text-transform:uppercase; font-family:var(--font-body);
-  font-weight:700;
-}
-.tc-card[data-t="3"] .tc-mbti { color:rgba(0,0,0,0.5); }
-.tc-card[data-t="4"] .tc-mbti { color:rgba(0,0,0,0.4); }
+.tc-card[data-t="3"] .tc-type { color:rgba(0,0,0,0.45); }
+.tc-card[data-t="4"] .tc-type { color:rgba(0,0,0,0.4); }
 
 .tc-name {
-  position:relative; z-index:1;
-  font-size:0.6rem; font-weight:900; line-height:1.25;
-  font-family:var(--font-display);
-  color:rgba(255,255,255,0.95);
+  font-family:var(--fd); font-size:0.58rem; line-height:1.25;
+  color:rgba(255,255,255,0.95); display:block;
 }
 .tc-card[data-t="3"] .tc-name { color:rgba(0,0,0,0.8); }
-.tc-card[data-t="4"] .tc-name { color:rgba(50,40,25,0.9); }
+.tc-card[data-t="4"] .tc-name { color:rgba(50,40,20,0.88); }
 
-.tc-ob { display:none; } /* 한자 라벨 완전 제거 */
-
-/* CTA button */
+/* CTA */
 .cta-btn {
   display:inline-flex; align-items:center; gap:6px;
-  padding:11px 28px; border-radius:50px;
-  font-family:var(--font-display); font-size:0.95rem;
-  border:none; cursor:pointer;
-  transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-  animation: fadeUp 0.6s 0.38s ease both;
+  padding:10px 26px; border-radius:50px;
+  font-family:var(--fd); font-size:0.9rem; border:none; cursor:pointer;
+  background:var(--red); color:#fff;
+  box-shadow:0 4px 0 #900, 0 7px 20px rgba(232,35,26,0.28);
+  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  animation: fadeUp 0.5s 0.3s ease both;
 }
-.cta-primary {
-  background:var(--red);
-  color:#fff;
-  box-shadow:0 5px 0 #8a0a05, 0 8px 24px rgba(232,35,26,0.3);
-  text-shadow:1px 1px 0 rgba(0,0,0,0.2);
-}
-.cta-primary:hover{transform:translateY(-3px);box-shadow:0 8px 0 #8a0a05, 0 14px 32px rgba(232,35,26,0.4);}
-.cta-primary:active{transform:translateY(2px);box-shadow:0 2px 0 #8a0a05;}
-.cta-primary:disabled{opacity:0.35;cursor:not-allowed;transform:none;box-shadow:0 5px 0 #aaa;}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 #900,0 12px 28px rgba(232,35,26,0.4);}
+.cta-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #900;}
+.cta-btn:disabled{opacity:0.3;cursor:not-allowed;transform:none;box-shadow:0 4px 0 #aaa;}
 
-@keyframes fadeUp {
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
-}
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
 
-/* ════════════════════════════════
-   SCREEN 2 — JUKEBOX PLAYER
-════════════════════════════════ */
+/* ══ SCREEN 2: JUKEBOX ══ */
 #screen-jukebox { position:relative; overflow:hidden; }
 
-.jb-bg {
-  position:absolute; inset:0; z-index:0;
-  transition:background 0.6s ease;
-}
-/* vinyl grooves texture on bg */
+.jb-bg { position:absolute; inset:0; z-index:0; transition:background 0.5s; }
 .jb-grooves {
-  position:absolute; inset:0; z-index:0;
-  opacity:0.04;
-  background-image: repeating-radial-gradient(
-    circle at 50% 20%,
-    transparent 0px, transparent 18px,
-    rgba(255,255,255,0.6) 18px, rgba(255,255,255,0.6) 19px
-  );
-  pointer-events:none;
+  position:absolute; inset:0; z-index:0; opacity:0.03; pointer-events:none;
+  background-image: repeating-radial-gradient(circle at 50% 20%, transparent 0, transparent 18px, rgba(255,255,255,0.7) 18px, rgba(255,255,255,0.7) 19px);
 }
-.jb-orb1,.jb-orb2 {
-  position:absolute; border-radius:50%;
-  pointer-events:none; z-index:0;
-  animation:float1 14s ease-in-out infinite;
-}
-.jb-orb1{width:500px;height:500px;top:-150px;left:-150px;}
-.jb-orb2{width:400px;height:400px;bottom:-100px;right:-100px;animation:float2 18s ease-in-out infinite;}
-@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,30px)}}
-@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-25px,-25px)}}
+.jb-orb { position:absolute; border-radius:50%; pointer-events:none; z-index:0; }
+.jb-orb1 { width:480px; height:480px; top:-140px; left:-140px; animation:flt1 14s ease-in-out infinite; }
+.jb-orb2 { width:380px; height:380px; bottom:-90px; right:-90px; animation:flt2 18s ease-in-out infinite; }
+@keyframes flt1{0%,100%{transform:translate(0,0)}50%{transform:translate(28px,28px)}}
+@keyframes flt2{0%,100%{transform:translate(0,0)}50%{transform:translate(-22px,-22px)}}
 
 .jb-content {
   position:relative; z-index:1;
-  padding:20px 18px 40px;
-  max-width:580px; margin:0 auto;
-  width:100%;
-  flex:1; display:flex; flex-direction:column;
-  gap:14px;
+  padding:18px 16px 36px;
+  max-width:560px; margin:0 auto;
+  width:100%; flex:1; display:flex; flex-direction:column; gap:12px;
 }
 
-/* top bar */
-.jb-topbar {
-  display:flex; align-items:center; justify-content:space-between;
-}
+.jb-topbar { display:flex; align-items:center; justify-content:space-between; }
 .back-btn {
-  display:inline-flex; align-items:center; gap:6px;
-  background:rgba(0,0,0,0.3);
-  border:1px solid rgba(255,255,255,0.15);
-  color:rgba(255,255,255,0.7);
-  padding:7px 14px; border-radius:30px;
-  cursor:pointer; font-size:0.78rem;
-  font-family:var(--font-body);
-  transition:all 0.2s;
+  display:inline-flex; align-items:center; gap:5px;
+  background:rgba(0,0,0,0.28); border:1px solid rgba(255,255,255,0.14);
+  color:rgba(255,255,255,0.72); padding:6px 13px; border-radius:30px;
+  cursor:pointer; font-size:0.75rem; font-family:var(--fb); transition:all 0.2s;
 }
-.back-btn:hover{background:rgba(0,0,0,0.5);color:#fff;}
-.jb-badge {
-  font-family:var(--font-display);
-  font-size:0.68rem; letter-spacing:3px;
-  color:rgba(255,255,255,0.35); text-transform:uppercase;
-}
+.back-btn:hover{background:rgba(0,0,0,0.45);color:#fff;}
+.jb-badge { font-family:var(--fd); font-size:0.65rem; letter-spacing:2px; color:rgba(255,255,255,0.32); text-transform:uppercase; }
 
-/* ── VINYL PLAYER CARD ── */
+/* Vinyl player */
 .vinyl-player {
-  background:rgba(0,0,0,0.4);
-  border:2px solid rgba(245,184,0,0.25);
-  border-radius:24px;
-  padding:20px;
-  backdrop-filter:blur(20px);
-  box-shadow:0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  background:rgba(0,0,0,0.38); border:2px solid rgba(245,184,0,0.22);
+  border-radius:22px; padding:18px;
+  backdrop-filter:blur(18px);
+  box-shadow:0 18px 56px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04);
 }
 
-.vinyl-top {
-  display:flex; gap:16px; align-items:center; margin-bottom:18px;
-}
+.vinyl-top { display:flex; gap:14px; align-items:center; margin-bottom:16px; }
 
-/* the actual vinyl disc */
 .vinyl-disc-wrap { position:relative; flex-shrink:0; }
 .vinyl-disc {
-  width:88px; height:88px;
-  border-radius:50%;
-  background: conic-gradient(
-    #0a0a0a 0deg, #1a1a1a 20deg, #0d0d0d 40deg, #222 60deg,
-    #0a0a0a 80deg, #1a1a1a 100deg, #0d0d0d 120deg, #222 140deg,
-    #0a0a0a 160deg, #1a1a1a 180deg, #0d0d0d 200deg, #222 220deg,
-    #0a0a0a 240deg, #1a1a1a 260deg, #0d0d0d 280deg, #222 300deg,
-    #0a0a0a 320deg, #1a1a1a 340deg, #0d0d0d 360deg
-  );
+  width:82px; height:82px; border-radius:50%;
+  background:conic-gradient(#090909 0deg,#1a1a1a 20deg,#0d0d0d 40deg,#222 60deg,#090909 80deg,#1a1a1a 100deg,#0d0d0d 120deg,#222 140deg,#090909 160deg,#1a1a1a 180deg,#0d0d0d 200deg,#222 220deg,#090909 240deg,#1a1a1a 260deg,#0d0d0d 280deg,#222 300deg,#090909 320deg,#1a1a1a 340deg,#0d0d0d 360deg);
   display:flex; align-items:center; justify-content:center;
-  position:relative;
-  box-shadow:0 4px 20px rgba(0,0,0,0.6), 0 0 0 2px rgba(245,184,0,0.15);
+  box-shadow:0 4px 18px rgba(0,0,0,0.55), 0 0 0 2px rgba(245,184,0,0.12);
 }
-.vinyl-disc.spinning { animation:discSpin 3s linear infinite; }
-@keyframes discSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.vinyl-disc.spinning { animation:spin 3s linear infinite; }
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
 .vinyl-label {
-  width:36px; height:36px; border-radius:50%;
-  background:radial-gradient(circle, var(--gold-l) 0%, var(--gold) 40%, var(--gold-d) 100%);
+  width:32px; height:32px; border-radius:50%;
+  background:radial-gradient(circle,var(--gold-l) 0%,var(--gold) 40%,var(--gold-d) 100%);
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  position:relative; z-index:1;
-  box-shadow:inset 0 2px 4px rgba(255,255,255,0.3), 0 2px 8px rgba(0,0,0,0.5);
+  box-shadow:inset 0 2px 4px rgba(255,255,255,0.3),0 2px 6px rgba(0,0,0,0.4);
+  position:relative;
 }
-.vinyl-label-text {
-  font-family:var(--font-display);
-  font-size:0.3rem; color:var(--black);
-  letter-spacing:0.5px; line-height:1.3; text-align:center;
-}
-/* center hole */
-.vinyl-hole {
-  position:absolute; width:6px; height:6px;
-  border-radius:50%; background:#1a1a1a;
-  top:50%; left:50%; transform:translate(-50%,-50%);
-  z-index:2;
-}
-/* shine ring */
-.vinyl-shine {
-  position:absolute; inset:0; border-radius:50%;
-  background:conic-gradient(from 120deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%);
-  pointer-events:none;
-}
-
-/* tonearm */
-.tonearm {
-  position:absolute;
-  bottom:-8px; right:-14px;
-  width:34px; height:34px;
-  z-index:3;
-}
-.tonearm svg { width:100%; height:100%; }
+.vinyl-label-txt { font-family:var(--fd); font-size:0.27rem; color:var(--black); line-height:1.2; text-align:center; }
+.vinyl-hole { position:absolute; width:5px; height:5px; border-radius:50%; background:#111; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2; }
+.vinyl-shine { position:absolute; inset:0; border-radius:50%; background:conic-gradient(from 120deg,transparent 40%,rgba(255,255,255,0.06) 50%,transparent 60%); pointer-events:none; }
 
 .vinyl-meta { flex:1; min-width:0; }
-.vinyl-step-tag {
-  display:inline-block;
-  font-size:0.58rem; letter-spacing:3px;
-  background:rgba(245,184,0,0.15);
-  color:var(--gold);
-  padding:3px 10px; border-radius:20px;
-  margin-bottom:8px; text-transform:uppercase;
-  font-family:var(--font-body); font-weight:700;
-  border:1px solid rgba(245,184,0,0.2);
+.np-step-tag {
+  display:inline-block; font-size:0.56rem; letter-spacing:2.5px;
+  background:rgba(245,184,0,0.14); color:var(--gold);
+  padding:2px 9px; border-radius:20px; margin-bottom:6px;
+  text-transform:uppercase; font-family:var(--fb); font-weight:700;
+  border:1px solid rgba(245,184,0,0.18);
 }
-.vinyl-song-name {
-  font-family:var(--font-display);
-  font-size:1.15rem; color:#fff;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  margin-bottom:4px;
-  text-shadow:0 0 20px rgba(245,184,0,0.2);
-}
-.vinyl-teacher {
-  font-size:0.72rem; color:rgba(255,255,255,0.4);
-}
+.np-song { font-family:var(--fd); font-size:1.08rem; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; }
+.np-teacher { font-size:0.68rem; color:rgba(255,255,255,0.38); }
 
-/* viz bars */
-.viz {
-  display:flex; align-items:flex-end; gap:3px; height:28px;
-}
-.viz-bar {
-  width:4px; border-radius:2px; height:5px;
-  background:var(--gold); opacity:0;
-  transition:opacity 0.3s;
-}
-.viz.on .viz-bar{opacity:1;animation:vizA 0.45s ease-in-out infinite alternate;}
-.viz-bar:nth-child(1){animation-delay:0s}
-.viz-bar:nth-child(2){animation-delay:0.07s}
-.viz-bar:nth-child(3){animation-delay:0.14s}
-.viz-bar:nth-child(4){animation-delay:0.03s}
-.viz-bar:nth-child(5){animation-delay:0.1s}
-@keyframes vizA{from{height:4px}to{height:26px}}
+.viz { display:flex; align-items:flex-end; gap:3px; height:26px; }
+.viz-bar { width:4px; border-radius:2px; height:4px; background:var(--gold); opacity:0; transition:opacity 0.3s; }
+.viz.on .viz-bar { opacity:1; animation:vizA 0.45s ease-in-out infinite alternate; }
+.viz-bar:nth-child(1){animation-delay:0s}.viz-bar:nth-child(2){animation-delay:0.07s}.viz-bar:nth-child(3){animation-delay:0.14s}.viz-bar:nth-child(4){animation-delay:0.03s}.viz-bar:nth-child(5){animation-delay:0.1s}
+@keyframes vizA{from{height:4px}to{height:24px}}
 
-/* progress */
-.prog-track {
-  height:4px; background:rgba(255,255,255,0.12);
-  border-radius:2px; cursor:pointer; margin-bottom:5px;
-}
-.prog-fill {
-  height:100%; background:linear-gradient(90deg,var(--gold),var(--red));
-  border-radius:2px; width:0%; transition:width 0.15s linear;
-  position:relative;
-}
-.prog-fill::after {
-  content:''; position:absolute; right:-5px; top:-4px;
-  width:12px; height:12px; border-radius:50%;
-  background:var(--gold);
-  box-shadow:0 0 8px rgba(245,184,0,0.6);
-}
-.time-row {
-  display:flex; justify-content:space-between;
-  font-size:0.65rem; color:rgba(255,255,255,0.35);
-  margin-bottom:14px;
-}
+.prog-track { height:4px; background:rgba(255,255,255,0.11); border-radius:2px; cursor:pointer; margin-bottom:4px; }
+.prog-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--red)); border-radius:2px; width:0%; transition:width 0.15s linear; position:relative; }
+.prog-fill::after { content:''; position:absolute; right:-5px; top:-4px; width:12px; height:12px; border-radius:50%; background:var(--gold); box-shadow:0 0 7px rgba(245,184,0,0.55); }
+.time-row { display:flex; justify-content:space-between; font-size:0.62rem; color:rgba(255,255,255,0.32); margin-bottom:12px; }
 
-/* controls */
-.controls {
-  display:flex; align-items:center; justify-content:center; gap:20px;
-  margin-bottom:14px;
-}
-.ctrl {
-  background:none; border:none; cursor:pointer;
-  color:rgba(255,255,255,0.6); font-size:1.3rem;
-  padding:8px; border-radius:50%; transition:all 0.2s;
-}
+.controls { display:flex; align-items:center; justify-content:center; gap:18px; margin-bottom:12px; }
+.ctrl { background:none; border:none; cursor:pointer; color:rgba(255,255,255,0.58); font-size:1.25rem; padding:7px; border-radius:50%; transition:all 0.18s; }
 .ctrl:hover{color:#fff;transform:scale(1.15);}
 .ctrl.play-btn {
-  width:58px; height:58px;
-  background:var(--gold); color:var(--black);
-  font-size:1.4rem; border-radius:50%;
+  width:54px; height:54px; background:var(--gold); color:var(--black);
+  font-size:1.3rem; border-radius:50%;
   display:flex; align-items:center; justify-content:center;
-  box-shadow:0 6px 24px rgba(245,184,0,0.4), 3px 3px 0 var(--gold-d);
-  transition:all 0.25s;
+  box-shadow:0 5px 0 var(--gold-d),0 8px 22px rgba(245,184,0,0.38);
 }
-.ctrl.play-btn:hover{transform:scale(1.08);box-shadow:0 10px 32px rgba(245,184,0,0.6), 3px 3px 0 var(--gold-d);}
+.ctrl.play-btn:hover{transform:scale(1.07);box-shadow:0 8px 0 var(--gold-d),0 12px 30px rgba(245,184,0,0.55);}
 
-/* volume */
-.vol-row{display:flex;align-items:center;gap:10px;}
-.vol-icon{font-size:0.85rem;color:rgba(255,255,255,0.35);}
-input[type=range]{
-  -webkit-appearance:none; flex:1; height:3px;
-  background:rgba(255,255,255,0.15); border-radius:2px; outline:none;
-}
-input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none; width:14px; height:14px;
-  border-radius:50%; background:var(--gold); cursor:pointer;
-}
+.vol-row{display:flex;align-items:center;gap:9px;}
+.vol-icon{font-size:0.8rem;color:rgba(255,255,255,0.3);}
+input[type=range]{-webkit-appearance:none;flex:1;height:3px;background:rgba(255,255,255,0.14);border-radius:2px;outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--gold);cursor:pointer;}
 
-/* ── PLAYLIST ── */
+/* Playlist */
 .playlist-card {
-  background:rgba(0,0,0,0.3);
-  border:1px solid rgba(245,184,0,0.12);
-  border-radius:18px; overflow:hidden;
-  backdrop-filter:blur(12px);
+  background:rgba(0,0,0,0.28); border:1px solid rgba(245,184,0,0.1);
+  border-radius:16px; overflow:hidden; backdrop-filter:blur(10px);
 }
-.pl-header {
-  padding:12px 18px;
-  font-size:0.6rem; letter-spacing:4px;
-  color:rgba(245,184,0,0.5); text-transform:uppercase;
-  border-bottom:1px solid rgba(245,184,0,0.08);
-  font-family:var(--font-body); font-weight:700;
-}
-.pl-item {
-  display:flex; align-items:center; gap:10px;
-  padding:10px 18px; cursor:pointer;
-  transition:background 0.15s; border-bottom:1px solid rgba(255,255,255,0.03);
-}
+.pl-header { padding:10px 16px; font-size:0.57rem; letter-spacing:3.5px; color:rgba(245,184,0,0.45); text-transform:uppercase; border-bottom:1px solid rgba(245,184,0,0.07); font-family:var(--fb); font-weight:700; }
+.pl-item { display:flex; align-items:center; gap:9px; padding:9px 16px; cursor:pointer; transition:background 0.13s; border-bottom:1px solid rgba(255,255,255,0.025); }
 .pl-item:last-child{border-bottom:none;}
-.pl-item:hover{background:rgba(245,184,0,0.06);}
-.pl-item.active{background:rgba(245,184,0,0.1);}
-.pl-item.no-song{opacity:0.3;cursor:default;}
-.pl-n{font-size:0.7rem;color:rgba(255,255,255,0.3);min-width:18px;text-align:center;}
+.pl-item:hover{background:rgba(245,184,0,0.055);}
+.pl-item.active{background:rgba(245,184,0,0.09);}
+.pl-item.no-song{opacity:0.28;cursor:default;}
+.pl-n{font-size:0.67rem;color:rgba(255,255,255,0.28);min-width:16px;text-align:center;}
 .pl-item.active .pl-n{color:var(--gold);}
-.pl-name{flex:1;font-size:0.85rem;font-weight:700;}
+.pl-name{flex:1;font-size:0.82rem;font-weight:700;font-family:var(--fd);}
 .pl-item.active .pl-name{color:var(--gold);}
-.pl-step-tag{
-  font-size:0.6rem;
-  background:rgba(245,184,0,0.1); color:rgba(245,184,0,0.7);
-  padding:2px 8px; border-radius:20px;
-  border:1px solid rgba(245,184,0,0.15);
-}
-.pl-dur{font-size:0.65rem;color:rgba(255,255,255,0.3);}
+.pl-step-tag{font-size:0.57rem;background:rgba(245,184,0,0.09);color:rgba(245,184,0,0.65);padding:2px 7px;border-radius:20px;border:1px solid rgba(245,184,0,0.12);}
+.pl-dur{font-size:0.62rem;color:rgba(255,255,255,0.28);}
 
-/* ── OTHER STYLES ── */
-.other-styles-section{margin-top:4px;}
-.other-styles-label{
-  font-size:0.58rem; letter-spacing:3px; text-align:center;
-  color:rgba(255,255,255,0.2); text-transform:uppercase;
-  margin-bottom:8px; font-family:var(--font-body);
+/* Other styles */
+.other-section { text-align:center; }
+.other-label { font-size:0.55rem; letter-spacing:2.5px; color:rgba(255,255,255,0.18); text-transform:uppercase; margin-bottom:7px; }
+.other-row { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+.other-btn {
+  background:rgba(0,0,0,0.28); border:1px solid rgba(255,255,255,0.09);
+  border-radius:30px; padding:4px 11px; cursor:pointer;
+  font-family:var(--fb); font-size:0.67rem; color:rgba(255,255,255,0.38);
+  transition:all 0.18s; white-space:nowrap; display:flex; align-items:center; gap:4px;
 }
-.other-styles-row{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;}
-.other-style-btn {
-  background:rgba(0,0,0,0.3);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:30px; padding:5px 12px;
-  cursor:pointer;
-  font-family:var(--font-body); font-size:0.7rem;
-  color:rgba(255,255,255,0.4);
-  transition:all 0.2s; white-space:nowrap;
-  display:flex; align-items:center; gap:5px;
-}
-.other-style-btn:hover{background:rgba(245,184,0,0.1);color:rgba(255,255,255,0.8);border-color:rgba(245,184,0,0.3);}
-.obs-hanja{font-family:var(--font-display);font-size:0.85rem;}
+.other-btn:hover{background:rgba(245,184,0,0.09);color:rgba(255,255,255,0.8);border-color:rgba(245,184,0,0.28);}
 
-/* admin entry */
-.admin-entry-btn {
-  display:flex; align-items:center; justify-content:center; gap:5px;
-  background:none; border:none; cursor:pointer;
-  color:rgba(255,255,255,0.15); font-family:var(--font-body);
-  font-size:0.68rem; letter-spacing:2px; padding:8px; width:100%;
-  transition:color 0.2s;
-}
-.admin-entry-btn:hover{color:rgba(255,255,255,0.4);}
+/* Admin entry */
+.admin-entry { display:flex; align-items:center; justify-content:center; gap:4px; background:none; border:none; cursor:pointer; color:rgba(255,255,255,0.14); font-family:var(--fb); font-size:0.65rem; letter-spacing:1.5px; padding:6px; width:100%; transition:color 0.2s; }
+.admin-entry:hover{color:rgba(255,255,255,0.38);}
 
-/* ════════════════════════════════
-   ADMIN OVERLAY
-════════════════════════════════ */
-.admin-overlay {
-  display:none; position:fixed; inset:0;
-  background:rgba(0,0,0,0.88); z-index:1000;
-  backdrop-filter:blur(10px); overflow-y:auto; padding:20px;
+/* ══ ADMIN OVERLAY ══ */
+.adm-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:1000; backdrop-filter:blur(10px); overflow-y:auto; padding:20px; }
+.adm-overlay.open{display:flex;flex-direction:column;align-items:center;}
+.adm-modal {
+  background:#131108; border:2px solid rgba(245,184,0,0.22);
+  border-radius:22px; width:100%; max-width:640px;
+  padding:26px 20px 34px;
+  animation:slideUp 0.3s cubic-bezier(0.34,1.2,0.64,1) both;
+  box-shadow:0 28px 80px rgba(0,0,0,0.55);
 }
-.admin-overlay.open{display:flex;flex-direction:column;align-items:center;}
+@keyframes slideUp{from{opacity:0;transform:translateY(38px)}to{opacity:1;transform:translateY(0)}}
 
-.admin-modal {
-  background:#131108;
-  border:2px solid rgba(245,184,0,0.25);
-  border-radius:24px; width:100%; max-width:660px;
-  padding:28px 22px 36px;
-  animation:slideUp 0.32s cubic-bezier(0.34,1.2,0.64,1) both;
-  box-shadow:0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(245,184,0,0.05);
-}
-@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+/* Login */
+.adm-lock{text-align:center;padding:14px 0;}
+.adm-lock-icon{font-size:2rem;margin-bottom:8px;}
+.adm-lock-title{font-family:var(--fd);font-size:1.2rem;color:var(--gold);margin-bottom:2px;}
+.adm-lock-sub{font-size:0.72rem;color:rgba(255,255,255,0.32);margin-bottom:20px;}
+.adm-token-inp{width:100%;max-width:220px;background:rgba(255,255,255,0.05);border:2px solid rgba(245,184,0,0.18);border-radius:10px;padding:12px;color:#fff;font-size:1.05rem;font-weight:700;letter-spacing:5px;text-align:center;outline:none;margin-bottom:5px;transition:border-color 0.2s;font-family:var(--fb);}
+.adm-token-inp:focus{border-color:var(--gold);}
+.adm-token-err{color:#ff5252;font-size:0.72rem;height:16px;margin-bottom:10px;}
+.adm-login-btn{background:var(--gold);color:var(--black);border:none;border-radius:30px;padding:10px 30px;font-family:var(--fd);font-size:0.95rem;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 0 var(--gold-d),0 6px 18px rgba(245,184,0,0.28);}
+.adm-login-btn:hover{transform:translateY(-2px);}
 
-/* login */
-.adm-lock{text-align:center;padding:16px 0;}
-.adm-lock-icon{font-size:2.2rem;margin-bottom:10px;}
-.adm-lock-title{font-family:var(--font-display);font-size:1.3rem;color:var(--gold);margin-bottom:3px;}
-.adm-lock-sub{font-size:0.75rem;color:rgba(255,255,255,0.35);margin-bottom:24px;}
-.adm-token-input {
-  width:100%; max-width:240px;
-  background:rgba(255,255,255,0.05);
-  border:2px solid rgba(245,184,0,0.2);
-  border-radius:12px; padding:13px;
-  color:#fff; font-size:1.1rem; font-weight:700;
-  letter-spacing:5px; text-align:center; outline:none;
-  margin-bottom:6px; transition:border-color 0.2s;
-  font-family:var(--font-body);
-}
-.adm-token-input:focus{border-color:var(--gold);}
-.adm-token-err{color:#ff5252;font-size:0.75rem;height:16px;margin-bottom:12px;}
-.adm-login-btn {
-  background:var(--gold); color:var(--black);
-  border:none; border-radius:30px;
-  padding:11px 32px;
-  font-family:var(--font-display); font-size:1rem;
-  cursor:pointer; transition:all 0.2s;
-  box-shadow:0 4px 18px rgba(245,184,0,0.3), 2px 2px 0 var(--gold-d);
-}
-.adm-login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(245,184,0,0.5), 2px 2px 0 var(--gold-d);}
-
-/* panel */
+/* Panel */
 .adm-panel{display:none;}
 .adm-panel.open{display:block;}
-.adm-header{
-  display:flex; align-items:center; justify-content:space-between;
-  margin-bottom:22px; padding-bottom:14px;
-  border-bottom:1px solid rgba(245,184,0,0.12);
-}
-.adm-title{font-family:var(--font-display);font-size:1.2rem;color:var(--gold);}
-.adm-close-btn{
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.1);
-  color:rgba(255,255,255,0.5); border-radius:20px;
-  padding:5px 14px; cursor:pointer;
-  font-family:var(--font-body); font-size:0.78rem;
-  transition:all 0.2s;
-}
-.adm-close-btn:hover{color:#fff;border-color:rgba(255,255,255,0.3);}
+.adm-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(245,184,0,0.1);}
+.adm-title{font-family:var(--fd);font-size:1.1rem;color:var(--gold);}
+.adm-close{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);border-radius:20px;padding:4px 12px;cursor:pointer;font-family:var(--fb);font-size:0.75rem;transition:all 0.2s;}
+.adm-close:hover{color:#fff;border-color:rgba(255,255,255,0.28);}
 
-.adm-section-label{
-  font-size:0.58rem; letter-spacing:3px;
-  color:rgba(245,184,0,0.6); text-transform:uppercase;
-  margin-bottom:8px; font-family:var(--font-body); font-weight:700;
+.adm-sec-label{font-size:0.57rem;letter-spacing:2.5px;color:rgba(245,184,0,0.58);text-transform:uppercase;margin-bottom:7px;font-family:var(--fb);font-weight:700;}
+.adm-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:13px;margin-bottom:14px;}
+
+/* URL editor — the core feature */
+.adm-url-editor { display:flex; flex-direction:column; gap:10px; }
+.adm-step-row {
+  background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px; padding:11px 12px;
 }
-.adm-config-box{
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.07);
-  border-radius:14px; padding:14px; margin-bottom:16px;
-}
-.adm-cfg-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-.adm-cfg-field label{display:block;font-size:0.65rem;color:rgba(255,255,255,0.35);margin-bottom:5px;}
-.adm-cfg-input{
-  width:100%; background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:8px; padding:9px 11px;
-  color:#fff; font-family:var(--font-body); font-size:0.82rem;
+.adm-step-row.has-url { border-color:rgba(0,220,100,0.25); }
+.adm-step-top { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.adm-step-tag { font-size:0.62rem; background:rgba(245,184,0,0.1); color:rgba(245,184,0,0.8); border-radius:20px; padding:2px 9px; white-space:nowrap; border:1px solid rgba(245,184,0,0.15); }
+.adm-step-name { flex:1; font-size:0.8rem; font-weight:700; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.adm-step-name.empty { color:rgba(255,255,255,0.25); font-style:italic; font-weight:400; }
+.adm-step-status-ok  { font-size:0.62rem; background:rgba(0,220,100,0.12); color:#00dc64; border-radius:20px; padding:2px 8px; }
+.adm-step-status-no  { font-size:0.62rem; background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.25); border-radius:20px; padding:2px 8px; }
+
+.adm-url-row { display:flex; gap:6px; align-items:center; }
+.adm-url-inp {
+  flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.09);
+  border-radius:7px; padding:7px 10px; color:#fff; font-family:var(--fb); font-size:0.72rem;
   outline:none; transition:border-color 0.2s;
 }
-.adm-cfg-input:focus{border-color:rgba(245,184,0,0.4);}
-.adm-cfg-hint{font-size:0.65rem;color:rgba(255,255,255,0.25);line-height:1.5;margin-bottom:10px;}
-.adm-cfg-hint a{color:rgba(245,184,0,0.7);}
-.adm-btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
-.adm-cfg-save{
-  background:rgba(245,184,0,0.15); border:1px solid rgba(245,184,0,0.4);
-  color:var(--gold); border-radius:8px; padding:7px 16px;
-  cursor:pointer; font-family:var(--font-body); font-size:0.78rem; font-weight:700;
-  transition:all 0.2s;
+.adm-url-inp:focus{border-color:rgba(245,184,0,0.35);}
+.adm-url-inp::placeholder{color:rgba(255,255,255,0.2);}
+.adm-name-inp {
+  width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);
+  border-radius:7px; padding:6px 10px; color:#fff; font-family:var(--fb); font-size:0.7rem;
+  outline:none; transition:border-color 0.2s; margin-top:5px;
 }
-.adm-cfg-save:hover{background:rgba(245,184,0,0.25);}
-.adm-cfg-save.blue{background:rgba(100,180,255,0.12);border-color:rgba(100,180,255,0.4);color:#64b4ff;}
-.adm-cfg-save.green{background:rgba(0,220,100,0.12);border-color:rgba(0,220,100,0.4);color:#00dc64;}
-#gh-status{font-size:0.72rem;margin-top:8px;line-height:1.5;display:none;}
+.adm-name-inp:focus{border-color:rgba(245,184,0,0.3);}
+.adm-name-inp::placeholder{color:rgba(255,255,255,0.18);}
+
+.adm-save-btn { background:rgba(0,220,100,0.12); border:1px solid rgba(0,220,100,0.35); border-radius:7px; padding:6px 11px; cursor:pointer; color:#00dc64; font-size:0.72rem; font-weight:700; font-family:var(--fb); transition:all 0.18s; white-space:nowrap; }
+.adm-save-btn:hover{background:rgba(0,220,100,0.22);}
+.adm-del-btn { background:rgba(255,82,82,0.08); border:1px solid rgba(255,82,82,0.22); border-radius:7px; padding:6px 8px; cursor:pointer; color:#ff5252; font-size:0.78rem; transition:all 0.18s; }
+.adm-del-btn:hover{background:rgba(255,82,82,0.18);}
 
 /* style tabs */
-.adm-style-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-.adm-tab{
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:8px; padding:5px 12px;
-  cursor:pointer; font-family:var(--font-display); font-size:0.8rem;
-  color:rgba(255,255,255,0.4); transition:all 0.2s;
-}
-.adm-tab.active{background:rgba(245,184,0,0.12);border-color:var(--gold);color:var(--gold);}
+.adm-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.adm-tab{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:5px 11px;cursor:pointer;font-family:var(--fd);font-size:0.78rem;color:rgba(255,255,255,0.38);transition:all 0.18s;}
+.adm-tab.active{background:rgba(245,184,0,0.11);border-color:var(--gold);color:var(--gold);}
 
-/* track rows */
-.adm-track-list{display:flex;flex-direction:column;gap:8px;}
-.adm-track-row{
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:12px; padding:12px;
-  transition:border-color 0.2s;
+/* save all button */
+.adm-save-all-btn {
+  width:100%; padding:12px; margin-top:16px;
+  background:var(--gold); color:var(--black); border:none; border-radius:10px;
+  font-family:var(--fd); font-size:1rem; cursor:pointer;
+  box-shadow:0 4px 0 var(--gold-d),0 6px 18px rgba(245,184,0,0.28);
+  transition:all 0.2s;
 }
-.adm-track-row.has-song{border-color:rgba(0,220,100,0.25);}
-.adm-track-top{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
-.adm-step-tag{
-  font-size:0.62rem;
-  background:rgba(245,184,0,0.1); color:rgba(245,184,0,0.8);
-  border-radius:20px; padding:2px 9px; white-space:nowrap;
-  border:1px solid rgba(245,184,0,0.15);
-}
-.adm-song-name{flex:1;font-size:0.82rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.adm-song-name.empty{color:rgba(255,255,255,0.25);font-weight:400;font-style:italic;}
-.adm-status-ok{font-size:0.65rem;background:rgba(0,220,100,0.12);color:#00dc64;border-radius:20px;padding:2px 8px;}
-.adm-status-none{font-size:0.65rem;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.25);border-radius:20px;padding:2px 8px;}
-.adm-upload-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
-.adm-upload-label{
-  position:relative;
-  background:rgba(245,184,0,0.1); border:1px dashed rgba(245,184,0,0.4);
-  border-radius:8px; padding:7px 12px;
-  cursor:pointer; font-size:0.72rem; font-weight:700; color:var(--gold);
-  transition:all 0.2s; white-space:nowrap;
-}
-.adm-upload-label:hover{background:rgba(245,184,0,0.18);border-style:solid;}
-.adm-upload-label input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0;}
-.adm-url-input{
-  flex:1; background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:8px; padding:7px 10px;
-  color:#fff; font-family:var(--font-body); font-size:0.72rem;
-  outline:none; min-width:100px; transition:border-color 0.2s;
-}
-.adm-url-input:focus{border-color:rgba(245,184,0,0.3);}
-.adm-url-input::placeholder{color:rgba(255,255,255,0.2);}
-.adm-save-url-btn{
-  background:rgba(0,220,100,0.1); border:1px solid rgba(0,220,100,0.35);
-  border-radius:8px; padding:6px 11px;
-  cursor:pointer; color:#00dc64;
-  font-size:0.72rem; font-weight:700; font-family:var(--font-body);
-  transition:all 0.2s; white-space:nowrap;
-}
-.adm-save-url-btn:hover{background:rgba(0,220,100,0.2);}
-.adm-del-btn{
-  background:rgba(255,82,82,0.08); border:1px solid rgba(255,82,82,0.25);
-  border-radius:8px; padding:6px 9px;
-  cursor:pointer; color:#ff5252; font-size:0.8rem; transition:all 0.2s;
-}
-.adm-del-btn:hover{background:rgba(255,82,82,0.18);}
-.adm-prog-wrap{
-  width:100%; height:3px; background:rgba(255,255,255,0.08);
-  border-radius:2px; overflow:hidden; margin-top:7px; display:none;
-}
-.adm-prog-fill{
-  height:100%;
-  background:linear-gradient(90deg,var(--gold),var(--red));
-  border-radius:2px; width:0%; transition:width 0.3s;
-}
+.adm-save-all-btn:hover{transform:translateY(-2px);}
 
-/* TOAST */
-#adm-toast {
-  position:fixed; bottom:28px; left:50%;
-  transform:translateX(-50%) translateY(80px);
-  background:var(--ink);
-  border:2px solid var(--gold);
-  border-radius:40px; padding:10px 24px;
-  font-size:0.82rem; font-weight:700; color:var(--gold);
-  box-shadow:0 8px 28px rgba(0,0,0,0.5);
-  transition:transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
-  z-index:2000; white-space:nowrap; pointer-events:none;
-}
+/* toast */
+#adm-toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:#131108;border:2px solid var(--gold);border-radius:40px;padding:9px 22px;font-size:0.8rem;font-weight:700;color:var(--gold);box-shadow:0 8px 28px rgba(0,0,0,0.5);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:2000;white-space:nowrap;pointer-events:none;}
 #adm-toast.show{transform:translateX(-50%) translateY(0);}
+
+/* how-to box */
+.adm-howto{background:rgba(245,184,0,0.07);border:1px solid rgba(245,184,0,0.15);border-radius:10px;padding:12px;margin-bottom:14px;font-size:0.72rem;line-height:1.7;color:rgba(255,255,255,0.6);}
+.adm-howto b{color:var(--gold);}
+.adm-howto ol{padding-left:16px;}
 </style>
 </head>
 <body>
 <audio id="audio" preload="auto"></audio>
 
-<!-- ══════════════════════════
-     SCREEN 1: INTRO
-══════════════════════════ -->
+<!-- ══ SCREEN 1: INTRO ══ -->
 <div class="screen active" id="screen-intro">
   <div class="intro-inner">
-
-    <!-- Logo -->
-    <div class="bigcat-logo-wrap">
-      <svg class="logo-cat-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div class="logo-row">
+      <svg class="logo-svg" viewBox="0 0 120 120" fill="none">
         <ellipse cx="60" cy="68" rx="42" ry="38" fill="#E8231A"/>
         <polygon points="22,42 10,14 38,32" fill="#E8231A"/>
         <polygon points="98,42 110,14 82,32" fill="#E8231A"/>
         <ellipse cx="60" cy="66" rx="26" ry="22" fill="white" opacity="0.95"/>
-        <text x="60" y="70" font-family="'Black Han Sans',sans-serif" font-size="11" fill="#E8231A" text-anchor="middle">Big Cat</text>
+        <text x="60" y="70" font-family="'Jua',sans-serif" font-size="10" fill="#E8231A" text-anchor="middle">Big Cat</text>
         <line x1="18" y1="68" x2="40" y2="65" stroke="#E8231A" stroke-width="2.5" stroke-linecap="round"/>
         <line x1="18" y1="74" x2="40" y2="72" stroke="#E8231A" stroke-width="2.5" stroke-linecap="round"/>
         <line x1="102" y1="68" x2="80" y2="65" stroke="#E8231A" stroke-width="2.5" stroke-linecap="round"/>
         <line x1="102" y1="74" x2="80" y2="72" stroke="#E8231A" stroke-width="2.5" stroke-linecap="round"/>
       </svg>
-      <div>
-        <div class="brand-name">JukeBox</div>
-      </div>
+      <div class="brand-title">JukeBox</div>
     </div>
-    <div class="brand-sub">BIG CAT</div>
-    <div class="brand-tagline">나의 수업 스타일에 맞는 음악을 찾아봐요 🎵</div>
+    <div class="brand-bigcat">BIG CAT</div>
+    <div class="brand-tag">나의 수업 스타일에 맞는 음악을 찾아봐요 🎵</div>
 
     <div class="ob-row">
       <div class="ob-dot"></div><div class="ob-dot"></div>
@@ -795,83 +450,67 @@ input[type=range]::-webkit-slider-thumb{
 
     <div class="tc-grid">
       <div class="tc-card" data-t="1" onclick="selectTeacher(this)">
-        <div class="tc-color-dot">💙</div>
-        <div class="tc-mbti">SJ</div>
-        <div class="tc-name">Stable<br>Teacher</div>
+        <span class="tc-icon">💙</span>
+        <span class="tc-type">SJ</span>
+        <span class="tc-name">Stable<br>Teacher</span>
       </div>
       <div class="tc-card" data-t="2" onclick="selectTeacher(this)">
-        <div class="tc-color-dot">❤️</div>
-        <div class="tc-mbti">EP</div>
-        <div class="tc-name">Activity<br>Teacher</div>
+        <span class="tc-icon">❤️</span>
+        <span class="tc-type">EP</span>
+        <span class="tc-name">Activity<br>Teacher</span>
       </div>
       <div class="tc-card" data-t="3" onclick="selectTeacher(this)">
-        <div class="tc-color-dot">💛</div>
-        <div class="tc-mbti">IF</div>
-        <div class="tc-name">Prepared<br>Teacher</div>
+        <span class="tc-icon">💛</span>
+        <span class="tc-type">IF</span>
+        <span class="tc-name">Prepared<br>Teacher</span>
       </div>
       <div class="tc-card" data-t="4" onclick="selectTeacher(this)">
-        <div class="tc-color-dot">🤍</div>
-        <div class="tc-mbti">FN</div>
-        <div class="tc-name">Relationship<br>Teacher</div>
+        <span class="tc-icon">🤍</span>
+        <span class="tc-type">FN</span>
+        <span class="tc-name">Relationship<br>Teacher</span>
       </div>
       <div class="tc-card" data-t="5" onclick="selectTeacher(this)">
-        <div class="tc-color-dot">🖤</div>
-        <div class="tc-mbti">TJ</div>
-        <div class="tc-name">Learning<br>Teacher</div>
+        <span class="tc-icon">🖤</span>
+        <span class="tc-type">TJ</span>
+        <span class="tc-name">Learning<br>Teacher</span>
       </div>
     </div>
 
-    <button class="cta-btn cta-primary" id="intro-next-btn" onclick="goToJukebox()" disabled>
+    <button class="cta-btn" id="intro-btn" onclick="goToJukebox()" disabled>
       🎵 나의 쥬크박스 열기
     </button>
   </div>
 </div>
 
-<!-- ══════════════════════════
-     SCREEN 2: JUKEBOX
-══════════════════════════ -->
+<!-- ══ SCREEN 2: JUKEBOX ══ -->
 <div class="screen" id="screen-jukebox">
   <div class="jb-bg" id="jb-bg"></div>
   <div class="jb-grooves"></div>
-  <div class="jb-orb1" id="jb-orb1"></div>
-  <div class="jb-orb2" id="jb-orb2"></div>
+  <div class="jb-orb jb-orb1" id="jb-orb1"></div>
+  <div class="jb-orb jb-orb2" id="jb-orb2"></div>
   <div class="jb-content">
 
     <div class="jb-topbar">
       <button class="back-btn" onclick="goTo('screen-intro')">← 교사 유형</button>
-      <div class="jb-badge" id="jb-title-badge">Style 1</div>
+      <div class="jb-badge" id="jb-badge">Style 1</div>
     </div>
 
-    <!-- Vinyl player -->
     <div class="vinyl-player">
       <div class="vinyl-top">
-        <!-- Disc -->
         <div class="vinyl-disc-wrap">
           <div class="vinyl-disc" id="disc">
             <div class="vinyl-label">
-              <div class="vinyl-label-text">Big Cat<br>JukeBox</div>
+              <div class="vinyl-label-txt">Big Cat<br>Jukebox</div>
+              <div class="vinyl-hole"></div>
             </div>
-            <div class="vinyl-hole"></div>
             <div class="vinyl-shine"></div>
           </div>
-          <!-- tonearm SVG -->
-          <div class="tonearm">
-            <svg viewBox="0 0 40 40" fill="none">
-              <line x1="32" y1="4" x2="8" y2="36" stroke="#aaa" stroke-width="2.5" stroke-linecap="round"/>
-              <circle cx="32" cy="4" r="4" fill="#ccc"/>
-              <rect x="4" y="33" width="8" height="5" rx="2" fill="#aaa" transform="rotate(-30 8 35)"/>
-            </svg>
-          </div>
         </div>
-
-        <!-- Meta -->
         <div class="vinyl-meta">
-          <div class="vinyl-step-tag" id="np-step">— Step —</div>
-          <div class="vinyl-song-name" id="np-song">곡을 선택하세요</div>
-          <div class="vinyl-teacher" id="np-teacher">Big Cat JukeBox</div>
+          <div class="np-step-tag" id="np-step">— Step —</div>
+          <div class="np-song" id="np-song">곡을 선택하세요</div>
+          <div class="np-teacher" id="np-teacher">Big Cat JukeBox</div>
         </div>
-
-        <!-- Viz -->
         <div class="viz" id="viz">
           <div class="viz-bar"></div><div class="viz-bar"></div>
           <div class="viz-bar"></div><div class="viz-bar"></div>
@@ -879,23 +518,17 @@ input[type=range]::-webkit-slider-thumb{
         </div>
       </div>
 
-      <!-- Progress -->
       <div class="prog-track" onclick="seekAudio(event)">
         <div class="prog-fill" id="prog-fill"></div>
       </div>
-      <div class="time-row">
-        <span id="t-cur">0:00</span>
-        <span id="t-tot">0:00</span>
-      </div>
+      <div class="time-row"><span id="t-cur">0:00</span><span id="t-tot">0:00</span></div>
 
-      <!-- Controls -->
       <div class="controls">
         <button class="ctrl" onclick="prevTrack()">⏮</button>
         <button class="ctrl play-btn" id="play-btn" onclick="togglePlay()">▶</button>
         <button class="ctrl" onclick="nextTrack()">⏭</button>
       </div>
 
-      <!-- Volume -->
       <div class="vol-row">
         <span class="vol-icon">🔈</span>
         <input type="range" min="0" max="1" step="0.05" value="0.8" oninput="audio.volume=this.value">
@@ -903,94 +536,56 @@ input[type=range]::-webkit-slider-thumb{
       </div>
     </div>
 
-    <!-- Playlist -->
     <div class="playlist-card">
       <div class="pl-header">📋 Playlist</div>
       <div id="pl-items"></div>
     </div>
 
-    <!-- Other styles -->
-    <div class="other-styles-section">
-      <div class="other-styles-label">다른 유형 살짝 따라해보기</div>
-      <div class="other-styles-row" id="other-styles-row"></div>
+    <div class="other-section">
+      <div class="other-label">다른 유형 살짝 따라해보기</div>
+      <div class="other-row" id="other-row"></div>
     </div>
 
-    <!-- Admin entry -->
-    <button class="admin-entry-btn" onclick="openAdmin()">⚙ 관리자</button>
+    <button class="admin-entry" onclick="openAdmin()">⚙ 관리자</button>
   </div>
 </div>
 
-<!-- ══════════════════════════
-     ADMIN OVERLAY
-══════════════════════════ -->
-<div class="admin-overlay" id="admin-overlay">
-  <div class="admin-modal">
-
-    <!-- Login -->
+<!-- ══ ADMIN OVERLAY ══ -->
+<div class="adm-overlay" id="adm-overlay">
+  <div class="adm-modal">
     <div class="adm-lock" id="adm-lock">
       <div class="adm-lock-icon">🔐</div>
       <div class="adm-lock-title">관리자 입장</div>
       <div class="adm-lock-sub">Big Cat JukeBox Admin</div>
-      <input class="adm-token-input" type="password" id="adm-token" placeholder="토큰 입력" maxlength="20"
-        onkeydown="if(event.key==='Enter')doAdminLogin()">
+      <input class="adm-token-inp" type="password" id="adm-token" placeholder="토큰 입력" maxlength="20" onkeydown="if(event.key==='Enter')doLogin()">
       <div class="adm-token-err" id="adm-err"></div>
-      <button class="adm-login-btn" onclick="doAdminLogin()">입장 →</button>
+      <button class="adm-login-btn" onclick="doLogin()">입장 →</button>
     </div>
 
-    <!-- Panel -->
     <div class="adm-panel" id="adm-panel">
-      <div class="adm-header">
+      <div class="adm-hdr">
         <div class="adm-title">🎵 Big Cat Admin</div>
-        <button class="adm-close-btn" onclick="closeAdmin()">닫기 ✕</button>
+        <button class="adm-close" onclick="closeAdmin()">닫기 ✕</button>
       </div>
 
-      <!-- Cloudinary -->
-      <div class="adm-section-label">☁️ Cloudinary 설정</div>
-      <div class="adm-config-box">
-        <div class="adm-cfg-row">
-          <div class="adm-cfg-field">
-            <label>Cloud Name</label>
-            <input class="adm-cfg-input" type="text" id="adm-cloud" placeholder="your_cloud_name">
-          </div>
-          <div class="adm-cfg-field">
-            <label>Upload Preset (Unsigned)</label>
-            <input class="adm-cfg-input" type="text" id="adm-preset" placeholder="unsigned_preset">
-          </div>
-        </div>
-        <div class="adm-cfg-hint">💡 Cloudinary 콘솔에서 Upload Preset을 <b style="color:#fff">Unsigned</b>로 생성하세요.</div>
+      <!-- How to -->
+      <div class="adm-howto">
+        <b>음원 등록 방법</b>
+        <ol>
+          <li>Cloudinary에 MP3 업로드 → URL 복사</li>
+          <li>아래 해당 Step의 URL 입력란에 붙여넣기</li>
+          <li>곡 제목 입력 후 <b>저장</b> 클릭</li>
+          <li><b>💾 전체 저장</b> 눌러 data.json 생성/다운로드</li>
+          <li>GitHub repo에 data.json 업로드하면 모든 기기 반영 ✅</li>
+        </ol>
       </div>
 
-      <!-- GitHub -->
-      <div class="adm-section-label">🐙 GitHub 설정 (모든 기기 공유)</div>
-      <div class="adm-config-box">
-        <div class="adm-cfg-row">
-          <div class="adm-cfg-field">
-            <label>GitHub Username</label>
-            <input class="adm-cfg-input" type="text" id="adm-gh-owner" placeholder="username">
-          </div>
-          <div class="adm-cfg-field">
-            <label>Repository Name</label>
-            <input class="adm-cfg-input" type="text" id="adm-gh-repo" placeholder="repo-name">
-          </div>
-        </div>
-        <div class="adm-cfg-field" style="margin-bottom:10px">
-          <label>Personal Access Token (repo 권한)</label>
-          <input class="adm-cfg-input" type="password" id="adm-gh-token" placeholder="ghp_xxxxxxxxxxxx">
-        </div>
-        <div class="adm-cfg-hint">💡 GitHub → Settings → Developer settings → Personal access tokens → <b style="color:#fff">Tokens (classic)</b> → <b style="color:#fff">repo</b> 권한</div>
-        <div class="adm-btn-row">
-          <button class="adm-cfg-save" onclick="saveAdmConfig()">💾 전체 저장</button>
-          <button class="adm-cfg-save blue" onclick="testGHConnection()">🔗 연결 테스트</button>
-          <button class="adm-cfg-save green" onclick="initDataJson()">📄 data.json 생성</button>
-        </div>
-        <span id="adm-cfg-ok" style="font-size:0.7rem;color:#00dc64;margin-top:6px;display:none">✓ 저장됨</span>
-        <div id="gh-status"></div>
-      </div>
+      <!-- Style tabs -->
+      <div class="adm-sec-label">🎵 스타일별 음원 관리</div>
+      <div class="adm-tabs" id="adm-tabs"></div>
+      <div class="adm-url-editor" id="adm-editor"></div>
 
-      <!-- Tracks -->
-      <div class="adm-section-label" style="margin-bottom:10px">🎵 스타일별 음원 관리</div>
-      <div class="adm-style-tabs" id="adm-tabs"></div>
-      <div class="adm-track-list" id="adm-tracks"></div>
+      <button class="adm-save-all-btn" onclick="saveAllToFile()">💾 data.json 저장 (다운로드)</button>
     </div>
   </div>
 </div>
@@ -998,489 +593,287 @@ input[type=range]::-webkit-slider-thumb{
 <div id="adm-toast"></div>
 
 <script>
-/* ─── DATA ─── */
+/* ── DATA ── */
 const TEACHERS = {
-  1:{ name:'SJ Stable Teacher',       icon:'💙', ob:'청', hanja:'靑', theme:'t-cheong',
-      bg:'linear-gradient(145deg,#0033cc,#1A6FFF,#55aaff)',
-      orb1:'rgba(100,170,255,0.6)', orb2:'rgba(26,111,255,0.4)', styleId:1 },
-  2:{ name:'EP Activity Teacher',     icon:'❤️', ob:'적', hanja:'赤', theme:'t-jeok',
-      bg:'linear-gradient(145deg,#aa0000,#FF2D1A,#ff6644)',
-      orb1:'rgba(255,100,70,0.6)', orb2:'rgba(255,45,26,0.4)', styleId:2 },
-  3:{ name:'IF Prepared Teacher',     icon:'💛', ob:'황', hanja:'黃', theme:'t-hwang',
-      bg:'linear-gradient(145deg,#cc7700,#FFB800,#ffe066)',
-      orb1:'rgba(255,210,60,0.6)', orb2:'rgba(255,184,0,0.4)', styleId:3 },
-  4:{ name:'FN Relationship Teacher', icon:'🤍', ob:'백', hanja:'白', theme:'t-baek',
-      bg:'linear-gradient(145deg,#888880,#c8c4b8,#f0ebe0)',
-      orb1:'rgba(240,235,224,0.5)', orb2:'rgba(200,196,184,0.35)', styleId:4 },
-  5:{ name:'TJ Learning Teacher',     icon:'🖤', ob:'흑', hanja:'黑', theme:'t-heuk',
-      bg:'linear-gradient(145deg,#000000,#1a1a1a,#333333)',
-      orb1:'rgba(140,140,140,0.4)', orb2:'rgba(80,80,80,0.3)', styleId:5 }
+  1:{name:'SJ Stable Teacher',    icon:'💙', theme:'t-cheong', bg:'linear-gradient(145deg,#0033cc,#1A6FFF,#55aaff)', orb1:'rgba(100,170,255,0.55)', orb2:'rgba(26,111,255,0.38)', styleId:1},
+  2:{name:'EP Activity Teacher',  icon:'❤️', theme:'t-jeok',   bg:'linear-gradient(145deg,#aa0000,#FF2D1A,#ff6644)', orb1:'rgba(255,100,70,0.55)', orb2:'rgba(255,45,26,0.38)', styleId:2},
+  3:{name:'IF Prepared Teacher',  icon:'💛', theme:'t-hwang',  bg:'linear-gradient(145deg,#cc7700,#FFB800,#ffe066)', orb1:'rgba(255,210,60,0.55)', orb2:'rgba(255,184,0,0.38)', styleId:3},
+  4:{name:'FN Relationship Teacher',icon:'🤍',theme:'t-baek',  bg:'linear-gradient(145deg,#888880,#c8c4b8,#f0ebe0)', orb1:'rgba(240,235,224,0.45)', orb2:'rgba(200,196,184,0.3)', styleId:4},
+  5:{name:'TJ Learning Teacher',  icon:'🖤', theme:'t-heuk',   bg:'linear-gradient(145deg,#000,#1a1a1a,#333)',       orb1:'rgba(140,140,140,0.38)', orb2:'rgba(80,80,80,0.28)', styleId:5}
 };
-
 const STYLES = [
-  {id:1, steps:['Warm up','Input','Action','Game','Speaking','Wrap up']},
-  {id:2, steps:['Hook','Story','Mission','Game','Speaking','Wrap up']},
-  {id:3, steps:['Warm up','Word','Practice','Game 1','Game 2','Wrap up']},
-  {id:4, steps:['Warm up','Word','Mission','Team game','Challenge','Wrap up']},
-  {id:5, steps:['Warm up','Word','Modeling','Role play','Game','Wrap up']}
+  {id:1,steps:['Warm up','Input','Action','Game','Speaking','Wrap up']},
+  {id:2,steps:['Hook','Story','Mission','Game','Speaking','Wrap up']},
+  {id:3,steps:['Warm up','Word','Practice','Game 1','Game 2','Wrap up']},
+  {id:4,steps:['Warm up','Word','Mission','Team game','Challenge','Wrap up']},
+  {id:5,steps:['Warm up','Word','Modeling','Role play','Game','Wrap up']}
 ];
 
+/* ── STATE ── */
 let selTeacher=null, selStyle=null;
 let playlist=[], curIdx=0, playing=false;
-const audio = document.getElementById('audio');
+let remoteData=null;
+const audio=document.getElementById('audio');
 
-function selectTeacher(el) {
+/* ── TEACHER SELECT ── */
+function selectTeacher(el){
   document.querySelectorAll('.tc-card').forEach(c=>c.classList.remove('selected'));
   el.classList.add('selected');
-  selTeacher = parseInt(el.dataset.t);
-  document.getElementById('intro-next-btn').disabled = false;
-  document.body.className = TEACHERS[selTeacher].theme;
+  selTeacher=parseInt(el.dataset.t);
+  document.getElementById('intro-btn').disabled=false;
+  document.body.className=TEACHERS[selTeacher].theme;
 }
 
-function goTo(id) {
+/* ── NAVIGATE ── */
+function goTo(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
 }
 
-async function goToJukebox(teacherId) {
-  if (teacherId) selTeacher = teacherId;
-  if (!selTeacher) return;
-  const t = TEACHERS[selTeacher];
-  selStyle = t.styleId;
-  document.body.className = t.theme;
-  document.getElementById('jb-bg').style.background = t.bg;
-  document.getElementById('jb-orb1').style.background = `radial-gradient(circle,${t.orb1} 0%,transparent 70%)`;
-  document.getElementById('jb-orb2').style.background = `radial-gradient(circle,${t.orb2} 0%,transparent 70%)`;
-  document.getElementById('jb-title-badge').textContent = `${t.hanja} · Style ${selStyle}`;
-  document.getElementById('np-teacher').textContent = `${t.name} · Style ${selStyle}`;
+async function goToJukebox(tid){
+  if(tid) selTeacher=tid;
+  if(!selTeacher) return;
+  const t=TEACHERS[selTeacher];
+  selStyle=t.styleId;
+  document.body.className=t.theme;
+  document.getElementById('jb-bg').style.background=t.bg;
+  document.getElementById('jb-orb1').style.background=`radial-gradient(circle,${t.orb1} 0%,transparent 70%)`;
+  document.getElementById('jb-orb2').style.background=`radial-gradient(circle,${t.orb2} 0%,transparent 70%)`;
+  document.getElementById('jb-badge').textContent=`${t.name} · Style ${selStyle}`;
+  document.getElementById('np-teacher').textContent=`${t.name} · Style ${selStyle}`;
   goTo('screen-jukebox');
   renderOtherStyles();
-  document.getElementById('pl-items').innerHTML = '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);font-size:0.8rem">🎵 불러오는 중...</div>';
+  document.getElementById('pl-items').innerHTML='<div style="text-align:center;padding:18px;color:rgba(255,255,255,0.28);font-size:0.8rem">🎵 불러오는 중...</div>';
   await loadPlaylist();
   renderPlaylist();
-  const fi = playlist.findIndex(p=>p.url);
-  if (fi>=0) { curIdx=fi; playTrack(fi); }
+  const fi=playlist.findIndex(p=>p.url);
+  if(fi>=0){curIdx=fi;playTrack(fi);}
 }
 
-function renderOtherStyles() {
-  const row = document.getElementById('other-styles-row');
-  row.innerHTML = '';
+/* ── LOAD PLAYLIST from data.json ── */
+async function loadPlaylist(){
+  const style=STYLES.find(s=>s.id===selStyle);
+  // fetch data.json — 같은 repo에 있으므로 상대경로로 fetch
+  if(!remoteData){
+    try{
+      const res=await fetch('data.json?t='+Date.now());
+      if(res.ok) remoteData=await res.json();
+    }catch{}
+  }
+  const sk=`s${selStyle}`;
+  playlist=style.steps.map((step,i)=>{
+    let d=null;
+    if(remoteData&&remoteData[sk]&&remoteData[sk][step]&&remoteData[sk][step].url)
+      d=remoteData[sk][step];
+    else{
+      try{const raw=localStorage.getItem(`bc_${selStyle}_${step}`);if(raw)d=JSON.parse(raw);}catch{}
+    }
+    return d?{i,step,url:d.url,name:d.name||step,dur:d.duration||null}
+            :{i,step,url:null,name:step,dur:null};
+  });
+}
+
+function renderOtherStyles(){
+  const row=document.getElementById('other-row');row.innerHTML='';
   Object.entries(TEACHERS).forEach(([id,t])=>{
-    const tid=parseInt(id);
-    if(tid===selTeacher) return;
+    const tid=parseInt(id); if(tid===selTeacher)return;
     const btn=document.createElement('button');
-    btn.className='other-style-btn';
-    btn.onclick=()=>{ if(playing){audio.pause();playing=false;} goToJukebox(tid); };
-    btn.innerHTML=`<span class="obs-hanja">${t.hanja}</span> ${t.name.split(' ')[0]}`;
+    btn.className='other-btn';
+    btn.onclick=()=>{if(playing){audio.pause();playing=false;}goToJukebox(tid);};
+    btn.innerHTML=`${t.icon} ${t.name.split(' ')[0]}`;
     row.appendChild(btn);
   });
 }
 
-/* ─── PLAYLIST (GitHub raw data.json fetch) ─── */
-let remoteData = null;
-
-async function fetchRemoteData() {
-  // raw.githubusercontent.com → 토큰 없이 모든 기기에서 읽힘
-  const owner = localStorage.getItem('bj_gh_owner') || 'uhoooo86-creative-droid';
-  const repo  = localStorage.getItem('bj_gh_repo')  || 'MBTI-teacher-s-Jukebox';
-  try {
-    const url = `https://raw.githubusercontent.com/${owner}/${repo}/main/data.json?t=${Date.now()}`;
-    const res = await fetch(url);
-    if(!res.ok) return null;
-    const json = await res.json();
-    return json;
-  } catch { return null; }
-}
-
-function getGHConfig() {
-  const owner = localStorage.getItem('bj_gh_owner');
-  const repo  = localStorage.getItem('bj_gh_repo');
-  const token = localStorage.getItem('bj_gh_token');
-  if(!owner||!repo||!token) return null;
-  return {owner,repo,token};
-}
-
-async function loadPlaylist() {
-  const style=STYLES.find(s=>s.id===selStyle);
-  remoteData = await fetchRemoteData();
-  const sk=`s${selStyle}`;
-  playlist = style.steps.map((step,i)=>{
-    let d=null;
-    if(remoteData&&remoteData[sk]&&remoteData[sk][step]) d=remoteData[sk][step];
-    else {
-      try {
-        const raw=localStorage.getItem(`bigcat_jukebox_s${selStyle}_${step.replace(/\s+/g,'_').toLowerCase()}`);
-        if(raw) d=JSON.parse(raw);
-      } catch{}
-    }
-    return d ? {i,step,url:d.url,name:d.name||step,dur:d.duration||null}
-             : {i,step,url:null,name:step,dur:null};
-  });
-}
-
-function renderPlaylist() {
-  const c=document.getElementById('pl-items'); c.innerHTML='';
+function renderPlaylist(){
+  const c=document.getElementById('pl-items');c.innerHTML='';
   playlist.forEach((t,i)=>{
     const el=document.createElement('div');
     el.className='pl-item'+(i===curIdx?' active':'')+(!t.url?' no-song':'');
-    el.id=`pli-${i}`;
-    el.onclick=()=>{ if(t.url){curIdx=i;playTrack(i);} };
-    el.innerHTML=`
-      <span class="pl-n">${t.url?(i===curIdx&&playing?'▶':'♩'):'—'}</span>
-      <span class="pl-name">${t.name}</span>
-      <span class="pl-step-tag">${t.step}</span>
-      ${t.dur?`<span class="pl-dur">${t.dur}</span>`:''}
-    `;
+    el.onclick=()=>{if(t.url){curIdx=i;playTrack(i);}};
+    el.innerHTML=`<span class="pl-n">${t.url?(i===curIdx&&playing?'▶':'♩'):'—'}</span><span class="pl-name">${t.name}</span><span class="pl-step-tag">${t.step}</span>${t.dur?`<span class="pl-dur">${t.dur}</span>`:''}`;
     c.appendChild(el);
   });
 }
 
-/* ─── PLAYER ─── */
-function playTrack(idx) {
-  const t=playlist[idx]; if(!t||!t.url) return;
+/* ── PLAYER ── */
+function playTrack(idx){
+  const t=playlist[idx];if(!t||!t.url)return;
   audio.src=t.url;
   audio.play().then(()=>{
-    playing=true; updateUI(); renderPlaylist();
+    playing=true;updateUI();renderPlaylist();
     document.getElementById('np-step').textContent=t.step;
     document.getElementById('np-song').textContent=t.name;
     document.getElementById('disc').classList.add('spinning');
     document.getElementById('viz').classList.add('on');
   }).catch(()=>{playing=false;updateUI();});
 }
-
-function togglePlay() {
-  if(!audio.src||!playlist[curIdx]?.url) return;
-  if(playing){
-    audio.pause(); playing=false;
-    document.getElementById('disc').classList.remove('spinning');
-    document.getElementById('viz').classList.remove('on');
-  } else {
-    audio.play(); playing=true;
-    document.getElementById('disc').classList.add('spinning');
-    document.getElementById('viz').classList.add('on');
-  }
+function togglePlay(){
+  if(!audio.src||!playlist[curIdx]?.url)return;
+  if(playing){audio.pause();playing=false;document.getElementById('disc').classList.remove('spinning');document.getElementById('viz').classList.remove('on');}
+  else{audio.play();playing=true;document.getElementById('disc').classList.add('spinning');document.getElementById('viz').classList.add('on');}
   updateUI();
 }
-
 function prevTrack(){let i=curIdx-1;while(i>=0&&!playlist[i].url)i--;if(i>=0){curIdx=i;playTrack(i);}}
 function nextTrack(){let i=curIdx+1;while(i<playlist.length&&!playlist[i].url)i++;if(i<playlist.length){curIdx=i;playTrack(i);}}
-
-function seekAudio(e){
-  if(!audio.duration)return;
-  const r=e.currentTarget.getBoundingClientRect();
-  audio.currentTime=((e.clientX-r.left)/r.width)*audio.duration;
-}
-
-audio.addEventListener('timeupdate',()=>{
-  if(!audio.duration)return;
-  document.getElementById('prog-fill').style.width=(audio.currentTime/audio.duration*100)+'%';
-  document.getElementById('t-cur').textContent=fmt(audio.currentTime);
-  document.getElementById('t-tot').textContent=fmt(audio.duration);
-});
+function seekAudio(e){if(!audio.duration)return;const r=e.currentTarget.getBoundingClientRect();audio.currentTime=((e.clientX-r.left)/r.width)*audio.duration;}
+audio.addEventListener('timeupdate',()=>{if(!audio.duration)return;document.getElementById('prog-fill').style.width=(audio.currentTime/audio.duration*100)+'%';document.getElementById('t-cur').textContent=fmt(audio.currentTime);document.getElementById('t-tot').textContent=fmt(audio.duration);});
 audio.addEventListener('ended',()=>nextTrack());
 audio.addEventListener('pause',()=>{playing=false;updateUI();});
 audio.addEventListener('play',()=>{playing=true;updateUI();});
-
 function updateUI(){document.getElementById('play-btn').textContent=playing?'⏸':'▶';}
 function fmt(s){if(!s||isNaN(s))return'0:00';return`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;}
 
-/* ═══════════════════════════
-   ADMIN
-═══════════════════════════ */
+/* ════════════════════════
+   ADMIN — URL 직접 입력 방식
+════════════════════════ */
 const ADMIN_TOKEN='bigcat2026';
 let admLoggedIn=false, admCurStyle=1;
 
+// In-memory data (edits before saving)
+let admData = {s1:{},s2:{},s3:{},s4:{},s5:{}};
+
 function openAdmin(){
-  document.getElementById('admin-overlay').classList.add('open');
+  document.getElementById('adm-overlay').classList.add('open');
   document.body.style.overflow='hidden';
-  admLoggedIn ? showAdmPanel() : showAdmLock();
+  admLoggedIn?showPanel():showLock();
 }
 function closeAdmin(){
-  document.getElementById('admin-overlay').classList.remove('open');
+  document.getElementById('adm-overlay').classList.remove('open');
   document.body.style.overflow='';
-  if(selStyle) loadPlaylist().then(()=>renderPlaylist());
+  // refresh playlist from localStorage
+  if(selStyle){loadPlaylist().then(()=>renderPlaylist());}
 }
-function showAdmLock(){
+function showLock(){
   document.getElementById('adm-lock').style.display='block';
   document.getElementById('adm-panel').classList.remove('open');
-  setTimeout(()=>document.getElementById('adm-token').focus(),200);
+  setTimeout(()=>document.getElementById('adm-token').focus(),180);
 }
-function showAdmPanel(){
+function showPanel(){
   document.getElementById('adm-lock').style.display='none';
   document.getElementById('adm-panel').classList.add('open');
-  loadAdmConfig(); renderAdmTabs(); renderAdmTracks(admCurStyle);
+  // load current data.json into admData if available
+  if(remoteData) admData=JSON.parse(JSON.stringify(remoteData));
+  // also load localStorage overrides
+  STYLES.forEach(s=>{
+    s.steps.forEach(step=>{
+      try{
+        const raw=localStorage.getItem(`bc_${s.id}_${step}`);
+        if(raw){
+          const d=JSON.parse(raw);
+          if(!admData[`s${s.id}`])admData[`s${s.id}`]={};
+          admData[`s${s.id}`][step]=d;
+        }
+      }catch{}
+    });
+  });
+  renderAdmTabs();
+  renderAdmEditor(admCurStyle);
 }
-function doAdminLogin(){
+function doLogin(){
   const v=document.getElementById('adm-token').value.trim();
-  if(v===ADMIN_TOKEN){
-    admLoggedIn=true;
-    document.getElementById('adm-err').textContent='';
-    document.getElementById('adm-token').value='';
-    showAdmPanel();
-  } else {
-    document.getElementById('adm-err').textContent='❌ 토큰이 올바르지 않습니다';
-    document.getElementById('adm-token').value='';
-  }
+  if(v===ADMIN_TOKEN){admLoggedIn=true;document.getElementById('adm-err').textContent='';document.getElementById('adm-token').value='';showPanel();}
+  else{document.getElementById('adm-err').textContent='❌ 토큰이 올바르지 않습니다';document.getElementById('adm-token').value='';}
 }
-function loadAdmConfig(){
-  document.getElementById('adm-cloud').value    = localStorage.getItem('bj_cloud')||'';
-  document.getElementById('adm-preset').value   = localStorage.getItem('bj_preset')||'';
-  document.getElementById('adm-gh-owner').value = localStorage.getItem('bj_gh_owner')||'';
-  document.getElementById('adm-gh-repo').value  = localStorage.getItem('bj_gh_repo')||'';
-  document.getElementById('adm-gh-token').value = localStorage.getItem('bj_gh_token')||'';
-}
-function saveAdmConfig(){
-  localStorage.setItem('bj_cloud',    document.getElementById('adm-cloud').value.trim());
-  localStorage.setItem('bj_preset',   document.getElementById('adm-preset').value.trim());
-  localStorage.setItem('bj_gh_owner', document.getElementById('adm-gh-owner').value.trim());
-  localStorage.setItem('bj_gh_repo',  document.getElementById('adm-gh-repo').value.trim());
-  localStorage.setItem('bj_gh_token', document.getElementById('adm-gh-token').value.trim());
-  const ok=document.getElementById('adm-cfg-ok');
-  ok.style.display='inline'; setTimeout(()=>ok.style.display='none',2000);
-  admToast('✅ 설정 저장됨');
-}
+
 function renderAdmTabs(){
-  const c=document.getElementById('adm-tabs'); c.innerHTML='';
+  const c=document.getElementById('adm-tabs');c.innerHTML='';
   STYLES.forEach(s=>{
     const t=TEACHERS[s.id];
     const btn=document.createElement('button');
     btn.className='adm-tab'+(s.id===admCurStyle?' active':'');
-    btn.innerHTML=`${t.hanja} Style ${s.id}`;
-    btn.onclick=()=>{ admCurStyle=s.id; renderAdmTabs(); renderAdmTracks(s.id); };
+    btn.innerHTML=`${t.icon} Style ${s.id}`;
+    btn.onclick=()=>{admCurStyle=s.id;renderAdmTabs();renderAdmEditor(s.id);};
     c.appendChild(btn);
   });
 }
 
-async function testGHConnection(){
-  const cfg=getGHConfig();
-  const st=document.getElementById('gh-status'); st.style.display='block';
-  if(!cfg){
-    st.style.color='#ff5252';
-    st.innerHTML='❌ Username / Repo / Token을 모두 입력하고 <b>💾 전체 저장</b>을 먼저 눌러주세요.';
-    return;
-  }
-  st.style.color='rgba(255,255,255,0.5)'; st.textContent='🔄 1단계: repo 연결 확인 중...';
-  try {
-    const res=await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}`,{
-      headers:{Authorization:`Bearer ${cfg.token}`,Accept:'application/vnd.github.v3+json'}
-    });
-    if(res.status===401){st.style.color='#ff5252';st.textContent='❌ Token이 유효하지 않아요. 새로 발급해주세요.';return;}
-    if(res.status===404){st.style.color='#ff5252';st.innerHTML=`❌ Repo를 찾을 수 없어요.<br><small style="opacity:0.6">username: <b>${cfg.owner}</b> / repo: <b>${cfg.repo}</b> 확인해주세요.</small>`;return;}
-    if(!res.ok){st.style.color='#ff5252';st.textContent=`❌ 오류 ${res.status}`;return;}
-    const j=await res.json();
-    st.style.color='rgba(255,255,255,0.5)'; st.textContent='🔄 2단계: data.json 확인 중...';
-    const dj=await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data.json`,{
-      headers:{Authorization:`Bearer ${cfg.token}`}
-    });
-    st.style.color='#00dc64';
-    st.innerHTML=`✅ 연결 성공! <b style="color:#fff">${j.full_name}</b><br>${dj.ok?'📄 data.json 이미 존재 — 바로 MP3 업로드 가능!':'⚠️ data.json 없음 → 아래 [📄 data.json 생성] 버튼을 눌러주세요.'}`;
-  } catch(e){
-    st.style.color='#ff5252';
-    st.textContent=`❌ 네트워크 오류: ${e.message}`;
-  }
-}
-
-async function initDataJson(){
-  const cfg=getGHConfig();
-  const st=document.getElementById('gh-status'); st.style.display='block';
-  if(!cfg){
-    st.style.color='#ff5252';
-    st.innerHTML='❌ 먼저 GitHub 설정을 입력하고 <b>💾 전체 저장</b>을 눌러주세요.';
-    return;
-  }
-  st.style.color='rgba(255,255,255,0.5)'; st.textContent='🔄 1단계: 기존 data.json 확인 중...';
-
-  const {data:existing, sha, error:fetchErr} = await getDataJson();
-  if(fetchErr){
-    st.style.color='#ff5252';
-    st.textContent=`❌ 읽기 실패: ${fetchErr}`;
-    return;
-  }
-
-  st.textContent='🔄 2단계: data.json 생성/업데이트 중...';
-  const merged = Object.assign({s1:{},s2:{},s3:{},s4:{},s5:{}}, existing);
-  const {ok, error:saveErr, status} = await saveDataJson(merged, sha);
-
-  if(ok){
-    st.style.color='#00dc64';
-    st.innerHTML=`✅ data.json ${sha?'업데이트':'생성'} 완료!<br><small style="opacity:0.7">이제 MP3 버튼을 눌러 음원을 업로드하세요.</small>`;
-    admToast('✅ data.json 생성 완료!');
-  } else {
-    st.style.color='#ff5252';
-    if(status===401) st.textContent='❌ Token 권한 오류 — repo 쓰기(write) 권한이 있는지 확인하세요.';
-    else if(status===404) st.textContent='❌ Repo를 찾을 수 없어요. Username/Repo 이름을 확인하세요.';
-    else if(status===422) st.textContent='❌ SHA 충돌 — 연결 테스트 후 다시 시도해주세요.';
-    else st.textContent=`❌ 생성 실패 (${status||saveErr||'unknown'}) — Token의 repo 쓰기 권한을 확인하세요.`;
-  }
-}
-
-async function getDataJson(){
-  const cfg=getGHConfig(); if(!cfg) return{data:{},sha:null,error:'설정 없음'};
-  try {
-    const res=await fetch(
-      `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data.json`,
-      {headers:{Authorization:`Bearer ${cfg.token}`,Accept:'application/vnd.github.v3+json'}}
-    );
-    if(res.status===404) return{data:{},sha:null,error:null}; // 없으면 새로 만들면 됨
-    if(!res.ok) return{data:{},sha:null,error:`HTTP ${res.status}`};
-    const j=await res.json();
-    const data=JSON.parse(atob(j.content.replace(/\n/g,'')));
-    return{data,sha:j.sha,error:null};
-  } catch(e){
-    return{data:{},sha:null,error:e.message};
-  }
-}
-
-async function saveDataJson(data,sha){
-  const cfg=getGHConfig(); if(!cfg){admToast('⚠️ GitHub 설정 먼저!');return{ok:false,error:'설정 없음'};}
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));
-  const body={message:'Update BigCat Jukebox data', content};
-  if(sha) body.sha=sha;
-  try {
-    const res=await fetch(
-      `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data.json`,
-      {method:'PUT', headers:{Authorization:`Bearer ${cfg.token}`,'Content-Type':'application/json'}, body:JSON.stringify(body)}
-    );
-    return{ok:res.ok, status:res.status};
-  } catch(e){
-    return{ok:false, error:e.message};
-  }
-}
-
-async function admSaveTrack(styleId,step,trackData){
-  admToast('💾 GitHub에 저장 중...');
-  const{data,sha}=await getDataJson();
-  const key=`s${styleId}`; if(!data[key])data[key]={};
-  data[key][step]=trackData;
-  localStorage.setItem(`bigcat_jukebox_s${styleId}_${step.replace(/\s+/g,'_').toLowerCase()}`,JSON.stringify(trackData));
-  const{ok,status}=await saveDataJson(data,sha);
-  if(ok) admToast('✅ 저장 완료! (모든 기기 반영)');
-  else   admToast(`⚠️ GitHub 저장 실패 (${status||'오류'}) — 로컬만 저장됨`);
-}
-
-async function admDeleteTrack(styleId,step){
-  const{data,sha}=await getDataJson();
-  const key=`s${styleId}`; if(data[key])delete data[key][step];
-  localStorage.removeItem(`bigcat_jukebox_s${styleId}_${step.replace(/\s+/g,'_').toLowerCase()}`);
-  await saveDataJson(data,sha);
-}
-
-function renderAdmTracks(styleId){
+function renderAdmEditor(styleId){
   const style=STYLES.find(s=>s.id===styleId);
-  const c=document.getElementById('adm-tracks'); c.innerHTML='';
-  style.steps.forEach((step,i)=>{
-    let data=null;
-    try{const raw=localStorage.getItem(`bigcat_jukebox_s${styleId}_${step.replace(/\s+/g,'_').toLowerCase()}`);if(raw)data=JSON.parse(raw);}catch{}
-    if(!data&&remoteData&&remoteData[`s${styleId}`]&&remoteData[`s${styleId}`][step])data=remoteData[`s${styleId}`][step];
-    const rid=`ar-${styleId}-${i}`;
+  const sk=`s${styleId}`;
+  const c=document.getElementById('adm-editor');c.innerHTML='';
+  style.steps.forEach(step=>{
+    const d=admData[sk]&&admData[sk][step]&&admData[sk][step].url ? admData[sk][step] : null;
+    const rid=`ae-${styleId}-${step.replace(/\s+/g,'-')}`;
     const row=document.createElement('div');
-    row.className='adm-track-row'+(data?' has-song':''); row.id=rid;
+    row.className='adm-step-row'+(d?' has-url':'');row.id=rid;
     row.innerHTML=`
-      <div class="adm-track-top">
+      <div class="adm-step-top">
         <span class="adm-step-tag">${step}</span>
-        <span class="adm-song-name ${data?'':'empty'}" id="aname-${rid}">${data?data.name:'등록된 곡 없음'}</span>
-        <span class="${data?'adm-status-ok':'adm-status-none'}" id="astatus-${rid}">${data?'✓ 등록됨':'없음'}</span>
+        <span class="adm-step-name${d?'':' empty'}" id="sn-${rid}">${d?d.name:'등록된 곡 없음'}</span>
+        <span class="${d?'adm-step-status-ok':'adm-step-status-no'}" id="ss-${rid}">${d?'✓':'없음'}</span>
       </div>
-      <div class="adm-upload-row">
-        <label class="adm-upload-label" id="auplabel-${rid}">
-          📤 MP3
-          <input type="file" accept=".mp3,.m4a,.wav,.aac,.ogg,.flac,audio/*" onchange="handleAdmUpload(event,'${step}',${styleId},'${rid}')">
-        </label>
-        <input class="adm-url-input" type="url" placeholder="URL 직접 입력..." id="aurl-${rid}" value="${data?data.url:''}">
-        <button class="adm-save-url-btn" onclick="admSaveUrl('${step}',${styleId},'${rid}')">저장</button>
-        ${data?`<button class="adm-del-btn" onclick="admDeleteConfirm('${step}',${styleId},'${rid}')">🗑</button>`:''}
+      <div class="adm-url-row">
+        <input class="adm-url-inp" type="url" placeholder="Cloudinary URL 붙여넣기..." id="url-${rid}" value="${d?d.url:''}">
+        <button class="adm-save-btn" onclick="admSaveStep('${step}',${styleId},'${rid}')">저장</button>
+        ${d?`<button class="adm-del-btn" onclick="admDelStep('${step}',${styleId},'${rid}')">🗑</button>`:''}
       </div>
-      <div class="adm-prog-wrap" id="aprog-${rid}"><div class="adm-prog-fill" id="aprogfill-${rid}"></div></div>
+      <input class="adm-name-inp" type="text" placeholder="곡 제목 (선택)" id="name-${rid}" value="${d?d.name:''}">
     `;
     c.appendChild(row);
   });
 }
 
-async function handleAdmUpload(e,step,styleId,rid){
-  const file=e.target.files[0]; if(!file) return;
-  const cloud=localStorage.getItem('bj_cloud')||'';
-  const preset=localStorage.getItem('bj_preset')||'';
-  if(!cloud||!preset){admToast('⚠️ Cloudinary 설정을 먼저 저장하세요!');return;}
-
-  const label=document.getElementById(`auplabel-${rid}`);
-  const progW=document.getElementById(`aprog-${rid}`);
-  const progF=document.getElementById(`aprogfill-${rid}`);
-  label.style.opacity='0.5'; label.style.pointerEvents='none';
-  progW.style.display='block'; progF.style.width='10%';
-  admToast(`⏳ "${file.name}" 업로드 중...`);
-
-  try {
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('upload_preset', preset);
-    // resource_type auto-detects audio/video
-    const uploadUrl = `https://api.cloudinary.com/v1_1/${cloud}/auto/upload`;
-
-    progF.style.width='40%';
-
-    const res = await fetch(uploadUrl, { method:'POST', body:fd });
-    progF.style.width='80%';
-
-    if(!res.ok){
-      let msg = `HTTP ${res.status}`;
-      try{ const j=await res.json(); msg=j.error?.message||msg; }catch{}
-      admToast(`❌ Cloudinary 오류: ${msg}`);
-      return;
-    }
-
-    const r = await res.json();
-    progF.style.width='100%';
-
-    const td = {
-      url: r.secure_url,
-      name: file.name.replace(/\.[^.]+$/,''),
-      duration: r.duration ? fmt(r.duration) : null
-    };
-    document.getElementById(`aurl-${rid}`).value = r.secure_url;
-    admUpdateRow(rid, td);
-    await admSaveTrack(styleId, step, td);
-
-  } catch(err){
-    admToast(`❌ 업로드 실패: ${err.message||'알 수 없는 오류'}`);
-    console.error('Upload error:', err);
-  } finally {
-    label.style.opacity='1'; label.style.pointerEvents='';
-    setTimeout(()=>{ progW.style.display='none'; progF.style.width='0%'; },1000);
+function admSaveStep(step,styleId,rid){
+  const url=document.getElementById(`url-${rid}`).value.trim();
+  const name=document.getElementById(`name-${rid}`).value.trim()||step;
+  if(!url){toast('⚠️ URL을 입력하세요');return;}
+  const sk=`s${styleId}`;
+  if(!admData[sk])admData[sk]={};
+  admData[sk][step]={url,name,duration:null};
+  // save to localStorage immediately
+  localStorage.setItem(`bc_${styleId}_${step}`,JSON.stringify({url,name,duration:null}));
+  // update row UI
+  const row=document.getElementById(rid);
+  if(row){
+    row.classList.add('has-url');
+    document.getElementById(`sn-${rid}`).textContent=name;
+    document.getElementById(`sn-${rid}`).classList.remove('empty');
+    document.getElementById(`ss-${rid}`).textContent='✓';
+    document.getElementById(`ss-${rid}`).className='adm-step-status-ok';
   }
+  toast(`✅ "${name}" 저장됨`);
 }
 
-async function admSaveUrl(step,styleId,rid){
-  const url=document.getElementById(`aurl-${rid}`).value.trim();
-  if(!url){admToast('⚠️ URL을 입력하세요');return;}
-  const td={url,name:step,duration:null};
-  admUpdateRow(rid,td); await admSaveTrack(styleId,step,td);
+function admDelStep(step,styleId,rid){
+  if(!confirm(`"${step}" 곡을 삭제할까요?`))return;
+  const sk=`s${styleId}`;
+  if(admData[sk])delete admData[sk][step];
+  localStorage.removeItem(`bc_${styleId}_${step}`);
+  renderAdmEditor(styleId);
+  toast(`🗑 "${step}" 삭제됨`);
 }
 
-async function admDeleteConfirm(step,styleId,rid){
-  if(!confirm(`"${step}" 곡을 삭제할까요?`)) return;
-  await admDeleteTrack(styleId,step);
-  renderAdmTracks(styleId); admToast(`🗑 "${step}" 삭제됨`);
+/* ── SAVE ALL → download data.json ── */
+function saveAllToFile(){
+  // build clean data object
+  const out={};
+  STYLES.forEach(s=>{
+    const sk=`s${s.id}`;
+    out[sk]={};
+    s.steps.forEach(step=>{
+      const d=admData[sk]&&admData[sk][step];
+      out[sk][step]=d&&d.url ? {url:d.url,name:d.name||step,duration:d.duration||null} : {url:'',name:'',duration:null};
+    });
+  });
+  const blob=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='data.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('📥 data.json 다운로드됨 → GitHub repo에 업로드하세요!');
 }
 
-function admUpdateRow(rid,data){
-  const row=document.getElementById(rid); if(!row)return;
-  row.classList.add('has-song');
-  const nm=document.getElementById(`aname-${rid}`);
-  nm.textContent=data.name; nm.classList.remove('empty');
-  const st=document.getElementById(`astatus-${rid}`);
-  st.textContent='✓ 등록됨'; st.className='adm-status-ok';
-}
+document.getElementById('adm-overlay').addEventListener('click',function(e){if(e.target===this)closeAdmin();});
 
-let admToastTimer;
-function admToast(msg){
+let toastTimer;
+function toast(msg){
   const el=document.getElementById('adm-toast');
-  el.textContent=msg; el.classList.add('show');
-  clearTimeout(admToastTimer);
-  admToastTimer=setTimeout(()=>el.classList.remove('show'),3000);
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200);
 }
-
-document.getElementById('admin-overlay').addEventListener('click',function(e){if(e.target===this)closeAdmin();});
 </script>
 </body>
 </html>
