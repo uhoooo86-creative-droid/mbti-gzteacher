@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIGCAT 🎵 Jukebox</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --cream2: #EDE8DC;
+    --red: #E63329;
+    --yellow: #F5C842;
+    --green: #4CAF50;
+    --blue: #4A90D9;
+    --orange: #F07B39;
+    --dark: #2C2416;
+
+    /* 교사유형 5가지 색상 (오방색 기반) */
+    --sj: #E63329;   /* 빨강 - 예쁨주의 */
+    --ep: #4CAF50;   /* 초록 - 유머형 */
+    --if: #F5C842;   /* 노랑 - 소심열정 */
+    --fn: #4A90D9;   /* 파랑 - 공감형 */
+    --tj: #2C2416;   /* 검정 - 교육주의 */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Nunito', sans-serif;
+    color: var(--dark);
+    min-height: 100vh;
+    background-image: radial-gradient(circle at 20% 20%, rgba(230,51,41,0.06) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 80%, rgba(74,144,217,0.06) 0%, transparent 50%),
+                      radial-gradient(circle at 50% 50%, rgba(245,200,66,0.04) 0%, transparent 70%);
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    text-align: center;
+    padding: 48px 20px 32px;
+    position: relative;
+  }
+
+  .logo-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .logo-tile {
+    width: 52px; height: 52px;
+    background: white;
+    border-radius: 14px;
+    border: 3px solid var(--dark);
+    box-shadow: 3px 3px 0 var(--dark);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    color: var(--red);
+    animation: tileIn 0.5s ease both;
+  }
+
+  .logo-tile:nth-child(1) { animation-delay: 0.05s; }
+  .logo-tile:nth-child(2) { animation-delay: 0.1s; }
+  .logo-tile:nth-child(3) { animation-delay: 0.15s; }
+  .logo-tile:nth-child(4) { animation-delay: 0.2s; }
+  .logo-tile:nth-child(5) { animation-delay: 0.25s; }
+
+  @keyframes tileIn {
+    from { opacity: 0; transform: translateY(-16px) rotate(-5deg); }
+    to   { opacity: 1; transform: translateY(0) rotate(0); }
+  }
+
+  h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(32px, 7vw, 56px);
+    color: var(--red);
+    line-height: 1.1;
+    letter-spacing: -1px;
+    text-shadow: 3px 3px 0 rgba(230,51,41,0.18);
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: #888;
+    margin-top: 8px;
+    font-weight: 600;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── TYPE FILTER BADGES ─── */
+  .filter-section {
+    padding: 0 20px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    animation: fadeUp 0.6s 0.5s ease both;
+  }
+
+  .filter-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: #aaa;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .badge {
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 2.5px solid var(--dark);
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    background: white;
+    color: var(--dark);
+    transition: all 0.15s;
+    box-shadow: 2px 2px 0 var(--dark);
+    user-select: none;
+  }
+
+  .badge:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--dark); }
+  .badge:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--dark); }
+
+  .badge.active { color: white; }
+  .badge[data-type="ALL"].active  { background: var(--dark); }
+  .badge[data-type="SJ"].active   { background: var(--sj); border-color: var(--sj); }
+  .badge[data-type="EP"].active   { background: var(--ep); border-color: var(--ep); }
+  .badge[data-type="IF"].active   { background: var(--if); border-color: var(--if); color: var(--dark); }
+  .badge[data-type="FN"].active   { background: var(--fn); border-color: var(--fn); }
+  .badge[data-type="TJ"].active   { background: var(--tj); border-color: var(--tj); }
+
+  .badge[data-step].active { background: var(--dark); color: white; }
+
+  /* ─── SONG GRID ─── */
+  .grid-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  .section-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    color: var(--dark);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .song-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .song-card {
+    background: white;
+    border-radius: 20px;
+    border: 2.5px solid var(--dark);
+    box-shadow: 4px 4px 0 var(--dark);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    overflow: hidden;
+    animation: cardIn 0.4s ease both;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: scale(0.95) translateY(8px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .song-card:hover {
+    transform: translate(-2px,-3px);
+    box-shadow: 6px 7px 0 var(--dark);
+  }
+
+  .song-card:active {
+    transform: translate(1px,1px);
+    box-shadow: 2px 2px 0 var(--dark);
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .type-dot {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 2px solid var(--dark);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 13px;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .type-dot.SJ { background: var(--sj); }
+  .type-dot.EP { background: var(--ep); }
+  .type-dot.IF { background: var(--if); color: var(--dark); }
+  .type-dot.FN { background: var(--fn); }
+  .type-dot.TJ { background: var(--tj); }
+
+  .step-tag {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 50px;
+    border: 2px solid var(--dark);
+    background: var(--cream2);
+    color: var(--dark);
+    letter-spacing: 0.5px;
+  }
+
+  .card-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px;
+    color: var(--dark);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .card-meta {
+    font-size: 12px;
+    color: #aaa;
+    font-weight: 700;
+  }
+
+  .card-play-btn {
+    margin-top: 14px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: 2px solid var(--dark);
+    background: var(--cream);
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 2px 2px 0 var(--dark);
+  }
+
+  .card-play-btn:hover { background: var(--dark); color: white; }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #bbb;
+  }
+
+  .empty-state .big { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 15px; font-weight: 700; }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(44,36,22,0.5);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: white;
+    border-radius: 28px;
+    border: 3px solid var(--dark);
+    box-shadow: 8px 8px 0 var(--dark);
+    max-width: 480px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: modalIn 0.3s ease both;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.92) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 24px 16px;
+    border-bottom: 2px solid var(--cream2);
+    position: sticky; top: 0;
+    background: white;
+    border-radius: 28px 28px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .modal-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 24px;
+    color: var(--dark);
+    flex: 1;
+    margin-right: 12px;
+  }
+
+  .modal-close {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 2px solid var(--dark);
+    background: var(--cream);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 2px 2px 0 var(--dark);
+    transition: all 0.15s;
+  }
+
+  .modal-close:hover { background: var(--dark); color: white; }
+
+  .modal-body { padding: 20px 24px 24px; }
+
+  .modal-tags {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .modal-section-label {
+    font-size: 11px;
+    font-weight: 800;
+    color: #aaa;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    margin-top: 18px;
+  }
+
+  .lyrics-box {
+    background: var(--cream);
+    border-radius: 14px;
+    border: 2px solid var(--cream2);
+    padding: 16px;
+  }
+
+  .lyric-line {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--cream2);
+    line-height: 1.5;
+  }
+
+  .lyric-line:last-child { border-bottom: none; }
+
+  .tpr-list {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+
+  .tpr-chip {
+    padding: 6px 14px;
+    border-radius: 50px;
+    background: var(--cream);
+    border: 2px solid var(--cream2);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  .modal-player {
+    margin-top: 20px;
+    background: var(--cream);
+    border-radius: 16px;
+    padding: 16px;
+    border: 2px solid var(--cream2);
+  }
+
+  .player-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .player-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    border: 2.5px solid var(--dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .player-meta { flex: 1; }
+  .player-meta .name { font-size: 14px; font-weight: 800; color: var(--dark); }
+  .player-meta .bpm  { font-size: 12px; color: #aaa; font-weight: 700; }
+
+  audio { width: 100%; border-radius: 8px; }
+
+  .no-audio {
+    text-align: center;
+    color: #bbb;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px;
+  }
+
+  /* ─── FLOATING ADMIN BTN ─── */
+  .fab {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--dark);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 20px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+    transition: all 0.15s;
+    font-family: 'Nunito', sans-serif;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .fab:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 rgba(0,0,0,0.3); }
+
+  /* ─── LOADING ─── */
+  .loading {
+    text-align: center;
+    padding: 60px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    color: #ccc;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 480px) {
+    header { padding: 32px 16px 20px; }
+    .filter-section { padding: 0 16px 16px; }
+    .grid-wrap { padding: 0 16px 80px; }
+    .logo-tile { width: 42px; height: 42px; font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-row">
+    <div class="logo-tile">B</div>
+    <div class="logo-tile">I</div>
+    <div class="logo-tile">G</div>
+    <div class="logo-tile">🐱</div>
+    <div class="logo-tile">🎵</div>
+  </div>
+  <h1>BIGCAT Jukebox</h1>
+  <p class="subtitle">교사 유형별 영어 수업 노래 플레이어</p>
+</header>
+
+<!-- FILTERS -->
+<div class="filter-section">
+  <div class="filter-label">👩‍🏫 교사 유형</div>
+  <div class="badge-row" id="typeFilter">
+    <span class="badge active" data-type="ALL">🎵 전체</span>
+    <span class="badge" data-type="SJ">💄 SJ 예쁨주의</span>
+    <span class="badge" data-type="EP">😄 EP 유머형</span>
+    <span class="badge" data-type="IF">🌿 IF 소심열정</span>
+    <span class="badge" data-type="FN">🧡 FN 공감형</span>
+    <span class="badge" data-type="TJ">📚 TJ 교육주의</span>
+  </div>
+
+  <div class="filter-label">📚 수업 단계</div>
+  <div class="badge-row" id="stepFilter">
+    <span class="badge active" data-step="ALL">전체</span>
+    <span class="badge" data-step="Warm up">🔥 Warm up</span>
+    <span class="badge" data-step="Word">📝 Word</span>
+    <span class="badge" data-step="Modeling">🎬 Modeling</span>
+    <span class="badge" data-step="Role play">🎭 Role play</span>
+    <span class="badge" data-step="Game">🎮 Game</span>
+    <span class="badge" data-step="Wrap up">🌙 Wrap up</span>
+  </div>
+</div>
+
+<!-- SONG GRID -->
+<div class="grid-wrap">
+  <div class="section-title">🎶 노래 목록</div>
+  <div class="song-grid" id="songGrid">
+    <div class="loading">🎵 노래 불러오는 중...</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">노래 제목</div>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- FAB: Admin -->
+<a class="fab" href="admin.html">⚙️ 관리자</a>
+
+<script>
+// ─── 상태 ───
+let allTracks = [];
+let activeType = 'ALL';
+let activeStep = 'ALL';
+let currentAudio = null;
+
+const TYPE_COLORS = { SJ:'#E63329', EP:'#4CAF50', IF:'#F5C842', FN:'#4A90D9', TJ:'#2C2416' };
+
+// ─── 데이터 (25곡 인라인 내장 + tracks.json fetch 병행) ───
+const INLINE_TRACKS = [
+  {"id":1,"type":"TJ","step":"Warm up","title":"Line Up Song","bpm":100,"mood":"structured, commanding","lyrics":["Line up, line up, stand in a row!","Hands on your side, ready to go!","Eyes on me, back straight and tall!","We're ready to learn — one and all!"],"tpr":["stand straight","hands on sides","look at teacher","march in place"],"audio_url":"","audio_style":"march, structured, clear beat"},
+  {"id":2,"type":"TJ","step":"Word","title":"Say It Right Song","bpm":95,"mood":"precise, rhythmic","lyrics":["Say it right, say it clear!","Listen close, the word is here!","One more time — say it loud!","Say it right and be so proud!"],"tpr":["cup hands to ears","point to mouth","repeat word","thumbs up"],"audio_url":"","audio_style":"structured, educational, clear"},
+  {"id":3,"type":"TJ","step":"Modeling","title":"Copy Me Song","bpm":98,"mood":"instructional, steady","lyrics":["Watch me first, then you do!","Copy me — through and through!","Eyes up here, do what I say!","You'll get it right today!"],"tpr":["point to eyes","mirror teacher","nod head","repeat action"],"audio_url":"","audio_style":"march, clear, instructional"},
+  {"id":4,"type":"TJ","step":"Role play","title":"Act It Out Song","bpm":102,"mood":"controlled, focused","lyrics":["Act it out, show me now!","You know the words — show me how!","Your turn to speak, your turn to try!","Stand up tall and reach the sky!"],"tpr":["stand up","speak clearly","point to partner","high five"],"audio_url":"","audio_style":"structured, motivational, clear"},
+  {"id":5,"type":"TJ","step":"Wrap up","title":"Good Job Song","bpm":96,"mood":"satisfied, organized","lyrics":["Good job today, you did so well!","You learned a lot — can you tell?","Pack your things and line up right!","See you next class — day or night!"],"tpr":["thumbs up","pat on back","pack bag motion","wave goodbye"],"audio_url":"","audio_style":"march, closing, warm"},
+  {"id":6,"type":"EP","step":"Warm up","title":"Let's Go Song","bpm":148,"mood":"super energetic, explosive","lyrics":["Let's GO! Let's GO! Wake up right now!","Jump up high and take a bow!","Shake your hands, stomp your feet!","English class — can't be beat!"],"tpr":["jump","shake hands","stomp feet","spin around"],"audio_url":"","audio_style":"dance, pop, high energy kids"},
+  {"id":7,"type":"EP","step":"Word","title":"Run Away Song","bpm":155,"mood":"fast, silly, fun","lyrics":["Run away from the scary word!","Say it fast — have you heard?","Shout it out! Don't be shy!","Words can fly — oh my oh my!"],"tpr":["run in place","shout word","cover eyes","laugh gesture"],"audio_url":"","audio_style":"fast pop, playful, silly"},
+  {"id":8,"type":"EP","step":"Modeling","title":"Find It Song","bpm":140,"mood":"exciting, adventurous","lyrics":["Find it! Find it! Look around!","Where's the word? Can it be found?","Check up high and check down low!","Found it — GO! GO! GO!"],"tpr":["look around","point up","point down","jump when found"],"audio_url":"","audio_style":"adventure, upbeat, kids pop"},
+  {"id":9,"type":"EP","step":"Game","title":"Crazy Game Song","bpm":160,"mood":"wild, chaotic fun","lyrics":["Crazy game — here we go!","Fast or slow? Yes or no?","Jump and spin and shout it out!","That's what English class is about!"],"tpr":["jump","spin","shout YES or NO","freeze pose"],"audio_url":"","audio_style":"dance, electronic, party kids"},
+  {"id":10,"type":"EP","step":"Wrap up","title":"High Five Song","bpm":145,"mood":"celebratory, loud","lyrics":["High five! High five! We did it today!","Best class ever — HEY HEY HEY!","Give a high five to your friend!","See you next time — till the end!"],"tpr":["high five partner","jump cheer","wave goodbye","fist bump"],"audio_url":"","audio_style":"pop, celebration, energetic kids"},
+  {"id":11,"type":"IF","step":"Warm up","title":"Hello Calm Song","bpm":78,"mood":"gentle, soft, welcoming","lyrics":["Hello, hello, it's a good day!","Take a breath and let's say hey!","Quiet hands, quiet feet!","Ready now — let's take a seat!"],"tpr":["deep breath","wave hello","hands on lap","sit down gently"],"audio_url":"","audio_style":"lullaby, soft piano, gentle"},
+  {"id":12,"type":"IF","step":"Word","title":"Look and Say Song","bpm":82,"mood":"calm, careful, supportive","lyrics":["Look at the word, take your time!","Say it softly — it's just fine!","No rush at all, nice and slow!","Look and say — now you know!"],"tpr":["point to card","say slowly","nod gently","smile"],"audio_url":"","audio_style":"soft pop, gentle rhythm, kids"},
+  {"id":13,"type":"IF","step":"Modeling","title":"Try Again Song","bpm":75,"mood":"encouraging, patient","lyrics":["Try again, it's okay!","Everyone learns day by day!","You can do it, yes you can!","Try again — that's the plan!"],"tpr":["gentle clap","encouraging nod","thumbs up","soft high five"],"audio_url":"","audio_style":"warm acoustic, gentle, supportive"},
+  {"id":14,"type":"IF","step":"Game","title":"Easy Game Song","bpm":85,"mood":"relaxed, fun, safe","lyrics":["Easy game, nice and slow!","Take a turn and off you go!","No big rush, we all can play!","Easy game — yay yay yay!"],"tpr":["take turns slowly","gentle point","clap softly","smile to partner"],"audio_url":"","audio_style":"soft acoustic, gentle kids game"},
+  {"id":15,"type":"IF","step":"Wrap up","title":"Good Bye Calm Song","bpm":70,"mood":"peaceful, closing, warm","lyrics":["Goodbye, goodbye, it's time to go!","You did so well — did you know?","Pack your bag and wave to me!","See you next time — happily!"],"tpr":["pack bag slowly","wave softly","smile","take deep breath"],"audio_url":"","audio_style":"lullaby, closing, soft piano"},
+  {"id":16,"type":"FN","step":"Warm up","title":"Hello Friend Song","bpm":92,"mood":"warm, bonding, cheerful","lyrics":["Hello friend, how are you today?","I'm so glad that you came to play!","Let's learn together, you and me!","Best of friends — happy and free!"],"tpr":["wave to friend","shake hands","point to partner","hug gesture"],"audio_url":"","audio_style":"warm acoustic, friendly, kids"},
+  {"id":17,"type":"FN","step":"Word","title":"I Like It Song","bpm":90,"mood":"expressive, emotional, fun","lyrics":["I like it! I like it a lot!","Say the word — give it a shot!","If you like it, shout it out!","That's what learning is about!"],"tpr":["thumbs up","shout word happily","clap","point to heart"],"audio_url":"","audio_style":"soft pop, expressive, warm kids"},
+  {"id":18,"type":"FN","step":"Modeling","title":"Together Song","bpm":88,"mood":"cooperative, inclusive","lyrics":["Together we can do this thing!","Listen to the words I sing!","Watch me first then do it too!","Together — me and you!"],"tpr":["hold hands","mirror teacher","point to partner","do together"],"audio_url":"","audio_style":"warm, cooperative, acoustic"},
+  {"id":19,"type":"FN","step":"Game","title":"Team Song","bpm":95,"mood":"team spirit, joyful","lyrics":["Team! Team! We're the best!","Work together — pass the test!","Help your friend and take a turn!","Together we can always learn!"],"tpr":["team cheer","help partner","take turns","group high five"],"audio_url":"","audio_style":"pop, team spirit, kids warm"},
+  {"id":20,"type":"FN","step":"Wrap up","title":"Best Friend Song","bpm":88,"mood":"emotional, heartwarming","lyrics":["Best friend, best friend — that is you!","Thank you for everything you do!","See you next time, don't forget!","Best class friends — the best one yet!"],"tpr":["point to friend","wave warmly","heart gesture","group hug motion"],"audio_url":"","audio_style":"acoustic, emotional, warm closing"},
+  {"id":21,"type":"SJ","step":"Warm up","title":"Hello Routine Song","bpm":105,"mood":"routine, cheerful, stable","lyrics":["Hello hello — it's our routine!","Best English class you've ever seen!","Sit down, look up, clap one two three!","Same as always — let's begin!"],"tpr":["sit down","look at board","clap three times","smile and ready"],"audio_url":"","audio_style":"pop march, routine, cheerful kids"},
+  {"id":22,"type":"SJ","step":"Word","title":"Daily Words Song","bpm":100,"mood":"consistent, clear, bright","lyrics":["Daily words, time to review!","Yesterday's words — do you know them too?","Say them once, say them twice!","Daily words — oh so nice!"],"tpr":["flip flashcard","repeat after teacher","write in air","check off fingers"],"audio_url":"","audio_style":"bright pop, educational, consistent"},
+  {"id":23,"type":"SJ","step":"Modeling","title":"Repeat After Me Song","bpm":98,"mood":"structured, repetitive, clear","lyrics":["Repeat after me — say it right!","We practice every day and night!","One more time — loud and clear!","Repeat after me — right here!"],"tpr":["cup hand to ear","repeat phrase","nod yes","clap rhythm"],"audio_url":"","audio_style":"structured, clear, rhythmic kids"},
+  {"id":24,"type":"SJ","step":"Game","title":"Routine Game Song","bpm":108,"mood":"familiar, fun, stable","lyrics":["Routine game — you know the rules!","Same as always — use your tools!","Step by step, we play the game!","Every class — it's always the same!"],"tpr":["follow steps","point to rules chart","take structured turn","thumbs up when done"],"audio_url":"","audio_style":"pop, structured game, routine"},
+  {"id":25,"type":"SJ","step":"Wrap up","title":"See You Tomorrow Song","bpm":102,"mood":"reliable, warm, closing routine","lyrics":["See you tomorrow — same time, same place!","Put on your smile and show your face!","Pack your bag the same way today!","See you tomorrow — hip hip hooray!"],"tpr":["pack bag","wave goodbye","point to clock","routine bow"],"audio_url":"","audio_style":"closing march, warm, routine kids"}
+];
+
+async function loadTracks() {
+  // 1) tracks.json fetch 시도 (GitHub Pages에서 작동)
+  try {
+    const res = await fetch('tracks.json');
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        allTracks = data;
+        render();
+        return;
+      }
+    }
+  } catch(e) {}
+  // 2) fetch 실패 시 인라인 데이터 사용 (로컬 파일 열기, CORS 오류 등)
+  allTracks = INLINE_TRACKS;
+  render();
+}
+
+// ─── 렌더링 ───
+function render() {
+  const filtered = allTracks.filter(t => {
+    const typeOk = activeType === 'ALL' || t.type === activeType;
+    const stepOk = activeStep === 'ALL' || t.step === activeStep;
+    return typeOk && stepOk;
+  });
+
+  const grid = document.getElementById('songGrid');
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="big">🎵</div>
+        <p>해당하는 노래가 없어요<br>관리자 페이지에서 추가해보세요!</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map((t, i) => `
+    <div class="song-card" onclick="openModal(${t.id})" style="animation-delay:${i*0.06}s">
+      <div class="card-top">
+        <div class="type-dot ${t.type}">${t.type}</div>
+        <span class="step-tag">${t.step}</span>
+      </div>
+      <div class="card-title">${t.title}</div>
+      <div class="card-meta">♩ ${t.bpm} BPM · ${t.mood}</div>
+      <button class="card-play-btn" onclick="event.stopPropagation(); openModal(${t.id})">
+        🎵 가사 + TPR 보기
+      </button>
+    </div>
+  `).join('');
+}
+
+// ─── 필터 ───
+document.getElementById('typeFilter').addEventListener('click', e => {
+  const badge = e.target.closest('[data-type]');
+  if (!badge) return;
+  document.querySelectorAll('#typeFilter .badge').forEach(b => b.classList.remove('active'));
+  badge.classList.add('active');
+  activeType = badge.dataset.type;
+  render();
+});
+
+document.getElementById('stepFilter').addEventListener('click', e => {
+  const badge = e.target.closest('[data-step]');
+  if (!badge) return;
+  document.querySelectorAll('#stepFilter .badge').forEach(b => b.classList.remove('active'));
+  badge.classList.add('active');
+  activeStep = badge.dataset.step;
+  render();
+});
+
+// ─── 모달 ───
+function openModal(id) {
+  const t = allTracks.find(x => x.id === id);
+  if (!t) return;
+
+  document.getElementById('modalTitle').textContent = t.title;
+
+  const typeColors = { SJ:'#E63329', EP:'#4CAF50', IF:'#F5C842', FN:'#4A90D9', TJ:'#2C2416' };
+  const col = typeColors[t.type] || '#2C2416';
+  const textCol = t.type === 'IF' ? '#2C2416' : 'white';
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-tags">
+      <span class="badge" style="background:${col};color:${textCol};border-color:${col}">${t.type}</span>
+      <span class="step-tag">${t.step}</span>
+      <span class="step-tag">♩ ${t.bpm} BPM</span>
+      <span class="step-tag">🎨 ${t.mood}</span>
+    </div>
+
+    <div class="modal-section-label">📝 가사 (Lyrics)</div>
+    <div class="lyrics-box">
+      ${(t.lyrics || []).map(l => `<div class="lyric-line">🎵 ${l}</div>`).join('')}
+    </div>
+
+    <div class="modal-section-label">💃 TPR 동작</div>
+    <div class="tpr-list">
+      ${(t.tpr || []).map(a => `<span class="tpr-chip">👉 ${a}</span>`).join('')}
+    </div>
+
+    <div class="modal-section-label">🎧 오디오 스타일</div>
+    <div class="tpr-chip" style="display:inline-block">${t.audio_style || '—'}</div>
+
+    <div class="modal-player">
+      <div class="player-info">
+        <div class="player-icon" style="background:${col}22;border-color:${col}">🎵</div>
+        <div class="player-meta">
+          <div class="name">${t.title}</div>
+          <div class="bpm">${t.bpm} BPM · ${t.type} Type</div>
+        </div>
+      </div>
+      ${t.audio_url
+        ? `<audio controls src="${t.audio_url}"></audio>`
+        : `<div class="no-audio">🎵 MP3를 추가하면 여기서 재생돼요</div>`
+      }
+    </div>
+  `;
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ─── 시작 ───
+loadTracks();
+</script>
+</body>
+</html>
