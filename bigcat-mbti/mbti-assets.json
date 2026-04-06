@@ -9,5 +9,27 @@
       "path": "./assets/audio/ENFJ-bgm.mp3"
     },
     "material": null
+  },
+  "ISTP": {
+    "group": "SP",
+    "icon": "💡",
+    "label": "창의형 교사",
+    "memo": "",
+    "audio": {
+      "name": "ENTP-bgm.mp3",
+      "path": "./assets/audio/ENTP-bgm.mp3"
+    },
+    "material": null
+  },
+  "ENTP": {
+    "group": "NT",
+    "icon": "💡",
+    "label": "창의형 교사",
+    "memo": "",
+    "audio": {
+      "name": "ENTP-bgm.mp3",
+      "path": "./assets/audio/ENTP-bgm.mp3"
+    },
+    "material": null
   }
 }
