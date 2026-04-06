@@ -2,664 +2,512 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BIGCAT Jukebox ⚙️ Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>BeatCat MBTI Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cream: #F5F0E8;
-    --cream2: #EDE8DC;
-    --red: #E63329;
-    --yellow: #F5C842;
-    --green: #4CAF50;
-    --blue: #4A90D9;
-    --dark: #2C2416;
-    --sj: #E63329;
-    --ep: #4CAF50;
-    --if: #F5C842;
-    --fn: #4A90D9;
-    --tj: #2C2416;
-  }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100%;background:#F5F3F0;font-family:'Nunito',sans-serif;color:#222;}
+button{cursor:pointer;font-family:'Nunito',sans-serif;border:none;outline:none;}
+input,textarea,select{font-family:'Nunito',sans-serif;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+#app{max-width:600px;margin:0 auto;padding:20px 16px 60px;}
 
-  body {
-    background: var(--cream);
-    font-family: 'Nunito', sans-serif;
-    color: var(--dark);
-    min-height: 100vh;
-    background-image: radial-gradient(circle at 10% 10%, rgba(230,51,41,0.06) 0%, transparent 40%);
-  }
+/* ── 헤더 ── */
+.page-header{text-align:center;padding:20px 0 24px;}
+.page-header .logo{font-size:28px;font-weight:900;color:#222;letter-spacing:-.02em;}
+.page-header .logo span{color:#E8584C;}
+.page-header .sub{font-size:11px;color:#999;font-weight:700;margin-top:4px;}
+.page-header .sub2{font-size:10px;color:#BBB;margin-top:2px;}
 
-  header {
-    text-align: center;
-    padding: 40px 20px 24px;
-    border-bottom: 2.5px solid var(--cream2);
-    background: white;
-  }
+/* ── 흰 카드 ── */
+.wcard{background:#fff;border-radius:18px;box-shadow:0 3px 16px rgba(0,0,0,.08);margin-bottom:16px;overflow:hidden;}
+.wcard-head{
+  padding:14px 18px 12px;
+  border-bottom:1px solid #F0F0F0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.wcard-title{font-size:14px;font-weight:900;color:#222;display:flex;align-items:center;gap:7px;}
+.wcard-title .ico{font-size:18px;}
+.wcard-body{padding:16px 18px;}
 
-  h1 {
-    font-family: 'Fredoka One', cursive;
-    font-size: 32px;
-    color: var(--dark);
-  }
+/* ── 그룹 탭 ── */
+.gtab-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;}
+.gtab{
+  display:flex;align-items:center;gap:5px;
+  padding:8px 14px;border-radius:20px;
+  font-size:12px;font-weight:800;
+  background:#F5F5F5;color:#777;
+  border:1.5px solid #EBEBEB;
+  transition:all .15s;
+}
+.gtab.on[data-g="NT"]{background:#FEE8E7;color:#C0392B;border-color:rgba(192,57,43,.25);}
+.gtab.on[data-g="NF"]{background:#FEF3DC;color:#B5720A;border-color:rgba(181,114,10,.25);}
+.gtab.on[data-g="SJ"]{background:#EBF4FF;color:#2563EB;border-color:rgba(37,99,235,.2);}
+.gtab.on[data-g="SP"]{background:#EAFBEF;color:#16A34A;border-color:rgba(22,163,74,.2);}
 
-  h1 span { color: var(--red); }
+/* ── MBTI 타입 선택 ── */
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.type-btn{
+  padding:10px 8px;border-radius:12px;
+  font-size:13px;font-weight:800;
+  background:#F8F8F8;color:#888;
+  border:2px solid #EBEBEB;
+  display:flex;align-items:center;gap:6px;
+  transition:all .15s;
+}
+.type-btn.on{color:#fff;border-color:transparent;}
+.type-btn.on.NT{background:#E8584C;}
+.type-btn.on.NF{background:#F5A623;}
+.type-btn.on.SJ{background:#4A90D9;}
+.type-btn.on.SP{background:#5BAD6F;}
 
-  .subtitle { font-size: 13px; color: #aaa; margin-top: 6px; font-weight: 700; }
+/* ── 폼 ── */
+.form-row{margin-bottom:13px;}
+.form-label{font-size:11px;font-weight:900;color:#AAA;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+.form-input{
+  width:100%;padding:10px 13px;
+  border-radius:10px;font-size:13px;font-weight:700;
+  border:1.5px solid #EBEBEB;background:#FAFAFA;color:#222;
+  transition:border .15s;
+}
+.form-input:focus{border-color:#E8584C;outline:none;background:#fff;}
+.form-textarea{resize:vertical;min-height:72px;line-height:1.6;}
 
-  .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 16px;
-    padding: 8px 16px;
-    background: var(--cream);
-    border: 2px solid var(--dark);
-    border-radius: 50px;
-    font-size: 13px;
-    font-weight: 800;
-    text-decoration: none;
-    color: var(--dark);
-    box-shadow: 2px 2px 0 var(--dark);
-    transition: all 0.15s;
-  }
+/* ── 업로드 존 ── */
+.upload-zone{
+  border:2px dashed #DCDCDC;border-radius:12px;
+  padding:18px 14px;text-align:center;
+  background:#FAFAFA;cursor:pointer;
+  transition:all .15s;position:relative;
+}
+.upload-zone:hover,.upload-zone.drag{border-color:#E8584C;background:#FFF5F4;}
+.upload-zone .uz-ico{font-size:28px;margin-bottom:6px;}
+.upload-zone .uz-text{font-size:12px;font-weight:800;color:#999;}
+.upload-zone .uz-sub{font-size:10px;color:#BBB;margin-top:3px;}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.file-preview{
+  display:flex;align-items:center;gap:8px;
+  background:#F0F0F0;border-radius:8px;padding:8px 12px;
+  margin-top:8px;font-size:11px;font-weight:800;color:#555;
+}
+.file-preview .fp-ico{font-size:16px;}
+.file-preview .fp-rm{margin-left:auto;color:#C0392B;cursor:pointer;font-size:16px;}
 
-  .back-btn:hover { background: var(--dark); color: white; }
+/* ── 버튼 ── */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:11px 18px;border-radius:12px;
+  font-size:13px;font-weight:900;
+  transition:all .15s;
+}
+.btn:active{transform:scale(.96);}
+.btn-primary{background:#E8584C;color:#fff;box-shadow:0 3px 10px rgba(232,88,76,.3);}
+.btn-sec{background:#F5F5F5;color:#555;}
+.btn-green{background:#5BAD6F;color:#fff;box-shadow:0 3px 10px rgba(91,173,111,.3);}
+.btn-full{width:100%;justify-content:center;}
 
-  /* ─── LAYOUT ─── */
-  .admin-wrap {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 32px 20px 80px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    align-items: start;
-  }
+/* ── 카드 리스트 ── */
+.entry-list{display:flex;flex-direction:column;gap:8px;}
+.entry-card{
+  background:#F8F8F8;border-radius:12px;
+  padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+  border:1.5px solid #EFEFEF;
+}
+.entry-icon{font-size:26px;flex-shrink:0;}
+.entry-info{flex:1;min-width:0;}
+.entry-type{font-size:13px;font-weight:900;color:#222;}
+.entry-meta{font-size:10px;color:#999;font-weight:700;margin-top:2px;}
+.entry-files{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap;}
+.file-tag{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:3px 8px;border-radius:8px;
+  font-size:10px;font-weight:800;
+}
+.file-tag.audio{background:#FEE8E7;color:#C0392B;}
+.file-tag.material{background:#EBF4FF;color:#2563EB;}
+.entry-actions{display:flex;gap:5px;flex-shrink:0;}
+.icon-btn{
+  width:32px;height:32px;border-radius:8px;
+  background:#EFEFEF;color:#777;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;transition:all .12s;
+}
+.icon-btn:active{transform:scale(.88);}
+.icon-btn.del{background:#FEE8E7;color:#C0392B;}
 
-  @media (max-width: 700px) {
-    .admin-wrap { grid-template-columns: 1fr; }
-  }
+/* ── JSON 출력 ── */
+.json-box{
+  background:#1E1E2E;border-radius:12px;
+  padding:14px;
+  font-family:'Courier New',monospace;
+  font-size:11px;line-height:1.7;
+  color:#A6E3A1;
+  max-height:280px;overflow-y:auto;
+  white-space:pre;
+}
+.copy-bar{
+  display:flex;gap:8px;align-items:center;
+  margin-top:10px;
+}
+.copy-feedback{font-size:11px;font-weight:800;color:#5BAD6F;display:none;}
+.copy-feedback.show{display:block;}
 
-  /* ─── PANEL ─── */
-  .panel {
-    background: white;
-    border-radius: 24px;
-    border: 2.5px solid var(--dark);
-    box-shadow: 5px 5px 0 var(--dark);
-    overflow: hidden;
-  }
+/* ── 배지 ── */
+.badge{
+  display:inline-block;padding:2px 8px;border-radius:20px;
+  font-size:10px;font-weight:900;
+}
+.badge.NT{background:#FEE8E7;color:#C0392B;}
+.badge.NF{background:#FEF3DC;color:#B5720A;}
+.badge.SJ{background:#EBF4FF;color:#2563EB;}
+.badge.SP{background:#EAFBEF;color:#16A34A;}
 
-  .panel-header {
-    padding: 20px 24px 16px;
-    border-bottom: 2px solid var(--cream2);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .panel-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: 18px;
-    color: var(--dark);
-  }
-
-  .panel-body { padding: 20px 24px 24px; }
-
-  /* ─── FORM ─── */
-  .form-group { margin-bottom: 14px; }
-
-  label {
-    display: block;
-    font-size: 11px;
-    font-weight: 800;
-    color: #aaa;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-  }
-
-  input, select, textarea {
-    width: 100%;
-    padding: 10px 14px;
-    border-radius: 12px;
-    border: 2px solid var(--cream2);
-    background: var(--cream);
-    font-family: 'Nunito', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--dark);
-    transition: border-color 0.15s;
-    outline: none;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--dark);
-    background: white;
-  }
-
-  textarea { resize: vertical; min-height: 80px; }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  /* ─── TYPE SELECTOR ─── */
-  .type-selector {
-    display: flex; gap: 8px; flex-wrap: wrap;
-  }
-
-  .type-btn {
-    padding: 7px 14px;
-    border-radius: 50px;
-    border: 2px solid var(--cream2);
-    background: var(--cream);
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--dark);
-    box-shadow: 2px 2px 0 var(--cream2);
-  }
-
-  .type-btn.selected { color: white; border-color: var(--dark); box-shadow: 2px 2px 0 var(--dark); }
-  .type-btn[data-v="SJ"].selected { background: var(--sj); }
-  .type-btn[data-v="EP"].selected { background: var(--ep); }
-  .type-btn[data-v="IF"].selected { background: var(--if); color: var(--dark); }
-  .type-btn[data-v="FN"].selected { background: var(--fn); }
-  .type-btn[data-v="TJ"].selected { background: var(--tj); }
-
-  /* ─── STEP SELECTOR ─── */
-  .step-selector {
-    display: flex; gap: 6px; flex-wrap: wrap;
-  }
-
-  .step-btn {
-    padding: 6px 12px;
-    border-radius: 50px;
-    border: 2px solid var(--cream2);
-    background: var(--cream);
-    font-size: 11px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: #888;
-  }
-
-  .step-btn.selected { background: var(--dark); color: white; border-color: var(--dark); }
-
-  /* ─── BUTTONS ─── */
-  .btn {
-    padding: 12px 20px;
-    border-radius: 14px;
-    border: 2.5px solid var(--dark);
-    font-family: 'Nunito', sans-serif;
-    font-size: 14px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.15s;
-    box-shadow: 3px 3px 0 var(--dark);
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .btn:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--dark); }
-  .btn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--dark); }
-
-  .btn-primary { background: var(--dark); color: white; }
-  .btn-danger  { background: var(--red); color: white; border-color: var(--red); }
-  .btn-outline { background: white; color: var(--dark); }
-  .btn-success { background: var(--green); color: white; border-color: var(--green); }
-
-  .btn-row {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    margin-top: 16px;
-  }
-
-  /* ─── TRACK LIST ─── */
-  .track-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px dashed var(--cream2);
-  }
-
-  .track-item:last-child { border-bottom: none; }
-
-  .track-dot {
-    width: 32px; height: 32px;
-    border-radius: 9px;
-    border: 2px solid var(--dark);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Fredoka One', cursive;
-    font-size: 11px;
-    color: white;
-    flex-shrink: 0;
-  }
-
-  .track-dot.SJ { background: var(--sj); }
-  .track-dot.EP { background: var(--ep); }
-  .track-dot.IF { background: var(--if); color: var(--dark); }
-  .track-dot.FN { background: var(--fn); }
-  .track-dot.TJ { background: var(--tj); }
-
-  .track-info { flex: 1; min-width: 0; }
-  .track-name { font-size: 14px; font-weight: 800; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .track-meta { font-size: 11px; color: #aaa; font-weight: 700; }
-
-  .track-actions { display: flex; gap: 6px; }
-
-  .icon-btn {
-    width: 32px; height: 32px;
-    border-radius: 9px;
-    border: 2px solid var(--cream2);
-    background: var(--cream);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    transition: all 0.15s;
-  }
-
-  .icon-btn:hover { border-color: var(--dark); background: var(--dark); color: white; }
-  .icon-btn.del:hover { border-color: var(--red); background: var(--red); }
-
-  /* ─── JSON 출력 영역 ─── */
-  .json-output {
-    background: var(--dark);
-    color: #7fff7f;
-    border-radius: 14px;
-    padding: 16px;
-    font-family: 'Courier New', monospace;
-    font-size: 12px;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    word-break: break-all;
-    max-height: 320px;
-    overflow-y: auto;
-    border: 2px solid var(--dark);
-  }
-
-  .copy-hint {
-    font-size: 12px;
-    color: #aaa;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  /* ─── TOAST ─── */
-  .toast {
-    position: fixed;
-    bottom: 24px; left: 50%; transform: translateX(-50%);
-    background: var(--dark);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 50px;
-    font-size: 14px;
-    font-weight: 800;
-    z-index: 999;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-  }
-
-  .toast.show { opacity: 1; }
-
-  .empty-list {
-    text-align: center;
-    padding: 30px;
-    color: #ccc;
-    font-size: 13px;
-    font-weight: 700;
-  }
-
-  .full-col {
-    grid-column: 1 / -1;
-  }
+/* 구분선 */
+.divider{height:1px;background:#F0F0F0;margin:14px 0;}
 </style>
 </head>
 <body>
+<div id="app">
 
-<header>
-  <a href="index.html" class="back-btn">← 메인으로</a>
-  <h1>BIGCAT <span>Admin</span> ⚙️</h1>
-  <p class="subtitle">노래 데이터 관리 · JSON 생성 · tracks.json 복사</p>
-</header>
+  <div class="page-header">
+    <div class="logo">BeatCat <span>Admin</span> ⚙️</div>
+    <div class="sub">MBTI 유형별 음원 · 교구 데이터 관리</div>
+    <div class="sub2">JSON 생성 → BeatCat MBTI 카드에 붙여넣기</div>
+  </div>
 
-<div class="admin-wrap">
-
-  <!-- ── 노래 추가 폼 ── -->
-  <div class="panel">
-    <div class="panel-header">
-      <div class="panel-title" id="formTitle">➕ 노래 추가</div>
+  <!-- ① 새 항목 추가 -->
+  <div class="wcard">
+    <div class="wcard-head">
+      <div class="wcard-title"><span class="ico">➕</span> 유형별 파일 추가</div>
     </div>
-    <div class="panel-body">
+    <div class="wcard-body">
 
-      <div class="form-group">
-        <label>노래 제목 (Title)</label>
-        <input type="text" id="fTitle" placeholder="예: Stand Up Song">
+      <!-- 그룹 선택 -->
+      <div class="form-label">그룹 선택</div>
+      <div class="gtab-row" id="group-tabs">
+        <button class="gtab on" data-g="NT">🔴 NT 전략형</button>
+        <button class="gtab" data-g="NF">🟡 NF 공감형</button>
+        <button class="gtab" data-g="SJ">🔵 SJ 안정형</button>
+        <button class="gtab" data-g="SP">🟢 SP 활동형</button>
       </div>
 
-      <div class="form-group">
-        <label>교사 유형 (Type)</label>
-        <div class="type-selector" id="typeSelector">
-          <div class="type-btn" data-v="SJ">💄 SJ</div>
-          <div class="type-btn" data-v="EP">😄 EP</div>
-          <div class="type-btn" data-v="IF">🌿 IF</div>
-          <div class="type-btn" data-v="FN">🧡 FN</div>
-          <div class="type-btn" data-v="TJ">📚 TJ</div>
-        </div>
-      </div>
+      <!-- MBTI 유형 선택 -->
+      <div class="form-label">MBTI 유형</div>
+      <div class="type-grid" id="type-grid"></div>
 
-      <div class="form-group">
-        <label>수업 단계 (Step)</label>
-        <div class="step-selector" id="stepSelector">
-          <div class="step-btn" data-v="Warm up">🔥 Warm up</div>
-          <div class="step-btn" data-v="Word">📝 Word</div>
-          <div class="step-btn" data-v="Modeling">🎬 Modeling</div>
-          <div class="step-btn" data-v="Role play">🎭 Role play</div>
-          <div class="step-btn" data-v="Game">🎮 Game</div>
-          <div class="step-btn" data-v="Wrap up">🌙 Wrap up</div>
-        </div>
-      </div>
+      <div class="divider"></div>
 
+      <!-- 음원 업로드 -->
       <div class="form-row">
-        <div class="form-group">
-          <label>BPM</label>
-          <input type="number" id="fBpm" placeholder="100" min="60" max="200">
+        <div class="form-label">🎵 음원 파일 (MP3 · WAV · M4A)</div>
+        <div class="upload-zone" id="audio-zone">
+          <div class="uz-ico">🎵</div>
+          <div class="uz-text">클릭 또는 드래그하여 음원 업로드</div>
+          <div class="uz-sub">MP3, WAV, M4A · 최대 50MB</div>
+          <input type="file" id="audio-file" accept="audio/*" onchange="handleAudio(this)">
         </div>
-        <div class="form-group">
-          <label>Mood</label>
-          <input type="text" id="fMood" placeholder="energetic, fun">
+        <div id="audio-preview"></div>
+      </div>
+
+      <!-- 교구 업로드 -->
+      <div class="form-row">
+        <div class="form-label">📎 교구 파일 (PDF · PNG · JPG · ZIP)</div>
+        <div class="upload-zone" id="material-zone">
+          <div class="uz-ico">📎</div>
+          <div class="uz-text">클릭 또는 드래그하여 교구 업로드</div>
+          <div class="uz-sub">PDF, PNG, JPG, ZIP · 최대 100MB</div>
+          <input type="file" id="material-file" accept=".pdf,.png,.jpg,.jpeg,.zip,.pptx" onchange="handleMaterial(this)">
+        </div>
+        <div id="material-preview"></div>
+      </div>
+
+      <!-- 메모 -->
+      <div class="form-row">
+        <div class="form-label">📝 메모 (선택)</div>
+        <textarea class="form-input form-textarea" id="memo-input" placeholder="예: Warm-up 활동용 BGM, A4 2장 출력"></textarea>
+      </div>
+
+      <button class="btn btn-primary btn-full" onclick="addEntry()">
+        ✅ 추가하기
+      </button>
+    </div>
+  </div>
+
+  <!-- ② 등록된 목록 -->
+  <div class="wcard">
+    <div class="wcard-head">
+      <div class="wcard-title"><span class="ico">📂</span> 등록된 항목</div>
+      <span id="entry-count" style="font-size:11px;font-weight:800;color:#BBB;">0개</span>
+    </div>
+    <div class="wcard-body">
+      <div class="entry-list" id="entry-list">
+        <div style="text-align:center;padding:20px 0;font-size:12px;color:#CCC;font-weight:700;">
+          아직 등록된 항목이 없습니다
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="form-group">
-        <label>가사 (한 줄에 하나씩)</label>
-        <textarea id="fLyrics" placeholder="Stand up! Sit down!&#10;Clap your hands!&#10;Ready to learn!"></textarea>
+  <!-- ③ JSON 출력 -->
+  <div class="wcard">
+    <div class="wcard-head">
+      <div class="wcard-title"><span class="ico">{ }</span> JSON 자동 생성</div>
+    </div>
+    <div class="wcard-body">
+      <div style="font-size:11px;color:#999;font-weight:700;margin-bottom:10px;">
+        아래 JSON을 복사해서 BeatCat MBTI 카드 파일의 <code style="background:#F0F0F0;padding:1px 5px;border-radius:4px;color:#E8584C;">mbtiAssets</code> 변수에 붙여넣으세요.
       </div>
-
-      <div class="form-group">
-        <label>TPR 동작 (쉼표로 구분)</label>
-        <input type="text" id="fTpr" placeholder="stand up, clap hands, turn around">
-      </div>
-
-      <div class="form-group">
-        <label>MP3 URL (Cloudinary)</label>
-        <input type="url" id="fAudioUrl" placeholder="https://res.cloudinary.com/...">
-      </div>
-
-      <div class="form-group">
-        <label>Audio Style</label>
-        <input type="text" id="fAudioStyle" placeholder="march, kids, upbeat">
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="saveTrack()">💾 저장</button>
-        <button class="btn btn-outline" onclick="resetForm()">↺ 초기화</button>
+      <div class="json-box" id="json-output">{}</div>
+      <div class="copy-bar">
+        <button class="btn btn-green" onclick="copyJson()">📋 JSON 복사</button>
+        <button class="btn btn-sec" onclick="downloadJson()">💾 JSON 다운로드</button>
+        <span class="copy-feedback" id="copy-feedback">✅ 복사됨!</span>
       </div>
     </div>
   </div>
 
-  <!-- ── 현재 목록 ── -->
-  <div class="panel">
-    <div class="panel-header">
-      <div class="panel-title">📋 노래 목록</div>
-      <span id="trackCount" style="font-size:13px;font-weight:800;color:#aaa">0곡</span>
+  <!-- ④ 사용 가이드 -->
+  <div class="wcard">
+    <div class="wcard-head">
+      <div class="wcard-title"><span class="ico">📖</span> 사용 방법</div>
     </div>
-    <div class="panel-body" id="trackList">
-      <div class="empty-list">아직 노래가 없어요<br>왼쪽에서 추가해보세요!</div>
-    </div>
-  </div>
-
-  <!-- ── JSON 출력 (전체 너비) ── -->
-  <div class="panel full-col">
-    <div class="panel-header">
-      <div class="panel-title">📦 tracks.json 출력</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-success" onclick="copyJSON()">📋 복사</button>
-        <button class="btn btn-outline" onclick="downloadJSON()">⬇️ 다운로드</button>
-      </div>
-    </div>
-    <div class="panel-body">
-      <p class="copy-hint">👆 복사 후 GitHub의 tracks.json 파일에 붙여넣으면 바로 반영돼요!</p>
-      <div class="json-output" id="jsonOutput">[ ]</div>
-    </div>
-  </div>
-
-  <!-- ── JSON 불러오기 ── -->
-  <div class="panel full-col">
-    <div class="panel-header">
-      <div class="panel-title">📥 기존 JSON 불러오기</div>
-    </div>
-    <div class="panel-body">
-      <p class="copy-hint">기존 tracks.json 내용을 붙여넣으면 불러올 수 있어요</p>
-      <textarea id="importArea" style="min-height:100px;font-family:monospace;font-size:12px" placeholder='[{"id":1,"type":"SJ",...}]'></textarea>
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="importJSON()">📥 불러오기</button>
-        <button class="btn btn-danger" onclick="clearAll()">🗑️ 전체 삭제</button>
+    <div class="wcard-body" style="font-size:12px;color:#666;font-weight:700;line-height:1.9;">
+      <b>1단계.</b> 그룹 → MBTI 유형 선택<br>
+      <b>2단계.</b> 음원 파일 업로드 (선택)<br>
+      <b>3단계.</b> 교구 파일 업로드 (선택)<br>
+      <b>4단계.</b> "추가하기" 클릭<br>
+      <b>5단계.</b> JSON 복사 → <code style="background:#F0F0F0;padding:1px 5px;border-radius:4px;color:#E8584C;">bigcat-mbti-cards.html</code> 파일 열기<br>
+      <b>6단계.</b> <code style="background:#F0F0F0;padding:1px 5px;border-radius:4px;color:#E8584C;">const ASSETS = </code> 부분에 붙여넣기<br><br>
+      <div style="background:#FEF3DC;border-radius:10px;padding:10px 12px;color:#B5720A;">
+        ⚠️ 음원/교구 파일은 실제로 웹서버에 업로드되어야 합니다. JSON에는 파일명과 메타데이터가 저장됩니다. 로컬 테스트 시 파일을 같은 폴더에 두세요.
       </div>
     </div>
   </div>
 
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script>
-let tracks = JSON.parse(localStorage.getItem('bigcat_tracks') || '[]');
-let editId = null;
-let selectedType = '';
-let selectedStep = '';
+// ── 데이터 ──
+const MBTI_GROUPS={
+  NT:{emoji:'🔴',label:'NT 전략형',
+    types:{INTJ:{icon:'🎯',label:'전략형 교사'},INTP:{icon:'🔍',label:'탐구형 교사'},ENTJ:{icon:'🏆',label:'리더형 교사'},ENTP:{icon:'💡',label:'창의형 교사'}}},
+  NF:{emoji:'🟡',label:'NF 공감형',
+    types:{INFJ:{icon:'🌙',label:'공감형 교사'},INFP:{icon:'🎨',label:'감성형 교사'},ENFJ:{icon:'🤝',label:'리드형 교사'},ENFP:{icon:'🎉',label:'활력형 교사'}}},
+  SJ:{emoji:'🔵',label:'SJ 안정형',
+    types:{ISTJ:{icon:'📋',label:'루틴형 교사'},ISFJ:{icon:'🌸',label:'케어형 교사'},ESTJ:{icon:'⚖️',label:'규칙형 교사'},ESFJ:{icon:'👏',label:'소통형 교사'}}},
+  SP:{emoji:'🟢',label:'SP 활동형',
+    types:{ISTP:{icon:'🔧',label:'실습형 교사'},ISFP:{icon:'🎭',label:'표현형 교사'},ESTP:{icon:'⚡',label:'액션형 교사'},ESFP:{icon:'🌟',label:'무대형 교사'}}},
+};
 
-// ─── 유형/단계 셀렉터 ───
-document.getElementById('typeSelector').addEventListener('click', e => {
-  const btn = e.target.closest('.type-btn');
-  if (!btn) return;
-  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  selectedType = btn.dataset.v;
+let curGroup='NT', curType='INTJ';
+let pendingAudio=null, pendingMaterial=null;
+let entries=JSON.parse(localStorage.getItem('mbti_entries')||'[]');
+
+function save(){localStorage.setItem('mbti_entries',JSON.stringify(entries));}
+
+// ── 그룹 탭 ──
+document.querySelectorAll('#group-tabs .gtab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    curGroup=btn.dataset.g;
+    document.querySelectorAll('#group-tabs .gtab').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    // 첫 타입으로
+    curType=Object.keys(MBTI_GROUPS[curGroup].types)[0];
+    renderTypeGrid();
+  });
 });
 
-document.getElementById('stepSelector').addEventListener('click', e => {
-  const btn = e.target.closest('.step-btn');
-  if (!btn) return;
-  document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  selectedStep = btn.dataset.v;
-});
+function renderTypeGrid(){
+  const grid=document.getElementById('type-grid');
+  grid.innerHTML='';
+  Object.entries(MBTI_GROUPS[curGroup].types).forEach(([key,td])=>{
+    const btn=document.createElement('button');
+    btn.className=`type-btn${key===curType?' on '+curGroup:''}`;
+    btn.innerHTML=`<span>${td.icon}</span>${key}`;
+    btn.onclick=()=>{curType=key;renderTypeGrid();};
+    grid.appendChild(btn);
+  });
+}
 
-// ─── 저장 ───
-function saveTrack() {
-  const title = document.getElementById('fTitle').value.trim();
-  const bpm = parseInt(document.getElementById('fBpm').value) || 100;
-  const mood = document.getElementById('fMood').value.trim();
-  const lyricsRaw = document.getElementById('fLyrics').value.trim();
-  const tprRaw = document.getElementById('fTpr').value.trim();
-  const audioUrl = document.getElementById('fAudioUrl').value.trim();
-  const audioStyle = document.getElementById('fAudioStyle').value.trim();
+// ── 파일 핸들러 ──
+function handleAudio(input){
+  const f=input.files[0]; if(!f) return;
+  pendingAudio={name:f.name,size:f.size,type:f.type,url:URL.createObjectURL(f)};
+  const prev=document.getElementById('audio-preview');
+  prev.innerHTML=`<div class="file-preview">
+    <span class="fp-ico">🎵</span>
+    <span>${f.name} <span style="color:#BBB">(${(f.size/1024/1024).toFixed(1)}MB)</span></span>
+    <span class="fp-rm" onclick="removeAudio()">✕</span>
+  </div>`;
+}
+function removeAudio(){
+  pendingAudio=null;
+  document.getElementById('audio-file').value='';
+  document.getElementById('audio-preview').innerHTML='';
+}
 
-  if (!title) return showToast('⚠️ 제목을 입력해주세요!');
-  if (!selectedType) return showToast('⚠️ 교사 유형을 선택해주세요!');
-  if (!selectedStep) return showToast('⚠️ 수업 단계를 선택해주세요!');
+function handleMaterial(input){
+  const f=input.files[0]; if(!f) return;
+  pendingMaterial={name:f.name,size:f.size,type:f.type,url:URL.createObjectURL(f)};
+  const prev=document.getElementById('material-preview');
+  prev.innerHTML=`<div class="file-preview">
+    <span class="fp-ico">📎</span>
+    <span>${f.name} <span style="color:#BBB">(${(f.size/1024/1024).toFixed(1)}MB)</span></span>
+    <span class="fp-rm" onclick="removeMaterial()">✕</span>
+  </div>`;
+}
+function removeMaterial(){
+  pendingMaterial=null;
+  document.getElementById('material-file').value='';
+  document.getElementById('material-preview').innerHTML='';
+}
 
-  const lyrics = lyricsRaw ? lyricsRaw.split('\n').map(l => l.trim()).filter(Boolean) : [];
-  const tpr = tprRaw ? tprRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
-
-  if (editId !== null) {
-    const idx = tracks.findIndex(t => t.id === editId);
-    if (idx !== -1) {
-      tracks[idx] = { ...tracks[idx], title, type: selectedType, step: selectedStep, bpm, mood, lyrics, tpr, audio_url: audioUrl, audio_style: audioStyle };
-      showToast('✅ 수정 완료!');
-      editId = null;
-      document.getElementById('formTitle').textContent = '➕ 노래 추가';
+// 드래그 앤 드롭
+['audio-zone','material-zone'].forEach(id=>{
+  const zone=document.getElementById(id);
+  zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('drag'));
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();zone.classList.remove('drag');
+    const f=e.dataTransfer.files[0];if(!f)return;
+    if(id==='audio-zone'){
+      const dt=new DataTransfer();dt.items.add(f);
+      document.getElementById('audio-file').files=dt.files;
+      handleAudio(document.getElementById('audio-file'));
+    }else{
+      const dt=new DataTransfer();dt.items.add(f);
+      document.getElementById('material-file').files=dt.files;
+      handleMaterial(document.getElementById('material-file'));
     }
-  } else {
-    const newId = tracks.length > 0 ? Math.max(...tracks.map(t => t.id)) + 1 : 1;
-    tracks.push({ id: newId, title, type: selectedType, step: selectedStep, bpm, mood, lyrics, tpr, audio_url: audioUrl, audio_style: audioStyle });
-    showToast('✅ 추가 완료!');
+  });
+});
+
+// ── 추가 ──
+function addEntry(){
+  if(!pendingAudio&&!pendingMaterial){
+    alert('음원 또는 교구 파일을 하나 이상 업로드해주세요.');return;
   }
-
+  const td=MBTI_GROUPS[curGroup].types[curType];
+  const entry={
+    id:Date.now(),
+    group:curGroup,
+    type:curType,
+    icon:td.icon,
+    label:td.label,
+    memo:document.getElementById('memo-input').value.trim(),
+    audio:pendingAudio?{name:pendingAudio.name,url:pendingAudio.url}:null,
+    material:pendingMaterial?{name:pendingMaterial.name,url:pendingMaterial.url}:null,
+    addedAt:new Date().toLocaleDateString('ko-KR'),
+  };
+  // 같은 유형 있으면 덮어쓰기
+  const idx=entries.findIndex(e=>e.type===curType);
+  if(idx>=0){
+    if(!confirm(`"${curType}" 항목이 이미 있습니다. 덮어쓸까요?`))return;
+    entries[idx]=entry;
+  }else{
+    entries.push(entry);
+  }
   save();
-  resetForm();
-  renderList();
-  renderJSON();
+  // 초기화
+  removeAudio();removeMaterial();
+  document.getElementById('memo-input').value='';
+  renderEntries();
+  renderJson();
 }
 
-// ─── 수정 ───
-function editTrack(id) {
-  const t = tracks.find(x => x.id === id);
-  if (!t) return;
-  editId = id;
-  document.getElementById('formTitle').textContent = '✏️ 수정 중';
-  document.getElementById('fTitle').value = t.title;
-  document.getElementById('fBpm').value = t.bpm;
-  document.getElementById('fMood').value = t.mood || '';
-  document.getElementById('fLyrics').value = (t.lyrics || []).join('\n');
-  document.getElementById('fTpr').value = (t.tpr || []).join(', ');
-  document.getElementById('fAudioUrl').value = t.audio_url || '';
-  document.getElementById('fAudioStyle').value = t.audio_style || '';
-
-  // 유형 선택
-  selectedType = t.type;
-  document.querySelectorAll('.type-btn').forEach(b => {
-    b.classList.toggle('selected', b.dataset.v === t.type);
-  });
-
-  // 단계 선택
-  selectedStep = t.step;
-  document.querySelectorAll('.step-btn').forEach(b => {
-    b.classList.toggle('selected', b.dataset.v === t.step);
-  });
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ─── 삭제 ───
-function deleteTrack(id) {
-  if (!confirm('이 노래를 삭제할까요?')) return;
-  tracks = tracks.filter(t => t.id !== id);
-  save();
-  renderList();
-  renderJSON();
-  showToast('🗑️ 삭제됨');
-}
-
-// ─── 초기화 ───
-function resetForm() {
-  editId = null;
-  document.getElementById('formTitle').textContent = '➕ 노래 추가';
-  document.getElementById('fTitle').value = '';
-  document.getElementById('fBpm').value = '';
-  document.getElementById('fMood').value = '';
-  document.getElementById('fLyrics').value = '';
-  document.getElementById('fTpr').value = '';
-  document.getElementById('fAudioUrl').value = '';
-  document.getElementById('fAudioStyle').value = '';
-  selectedType = '';
-  selectedStep = '';
-  document.querySelectorAll('.type-btn, .step-btn').forEach(b => b.classList.remove('selected'));
-}
-
-// ─── 목록 렌더 ───
-function renderList() {
-  const el = document.getElementById('trackList');
-  document.getElementById('trackCount').textContent = `${tracks.length}곡`;
-
-  if (tracks.length === 0) {
-    el.innerHTML = '<div class="empty-list">아직 노래가 없어요<br>왼쪽에서 추가해보세요!</div>';
+// ── 목록 렌더 ──
+function renderEntries(){
+  const list=document.getElementById('entry-list');
+  document.getElementById('entry-count').textContent=entries.length+'개';
+  if(!entries.length){
+    list.innerHTML='<div style="text-align:center;padding:20px 0;font-size:12px;color:#CCC;font-weight:700;">아직 등록된 항목이 없습니다</div>';
     return;
   }
-
-  el.innerHTML = tracks.map(t => `
-    <div class="track-item">
-      <div class="track-dot ${t.type}">${t.type}</div>
-      <div class="track-info">
-        <div class="track-name">${t.title}</div>
-        <div class="track-meta">${t.step} · ${t.bpm} BPM</div>
+  list.innerHTML='';
+  // 그룹 순 정렬
+  const order=['NT','NF','SJ','SP'];
+  const sorted=[...entries].sort((a,b)=>order.indexOf(a.group)-order.indexOf(b.group)||a.type.localeCompare(b.type));
+  sorted.forEach(e=>{
+    const el=document.createElement('div');
+    el.className='entry-card';
+    el.innerHTML=`
+      <div class="entry-icon">${e.icon}</div>
+      <div class="entry-info">
+        <div class="entry-type">
+          ${e.type} <span class="badge ${e.group}">${e.group}</span>
+        </div>
+        <div class="entry-meta">${e.label}${e.memo?' · '+e.memo:''} · ${e.addedAt}</div>
+        <div class="entry-files">
+          ${e.audio?`<span class="file-tag audio">🎵 ${e.audio.name}</span>`:''}
+          ${e.material?`<span class="file-tag material">📎 ${e.material.name}</span>`:''}
+        </div>
       </div>
-      <div class="track-actions">
-        <button class="icon-btn" onclick="editTrack(${t.id})">✏️</button>
-        <button class="icon-btn del" onclick="deleteTrack(${t.id})">🗑️</button>
+      <div class="entry-actions">
+        ${e.audio?`<button class="icon-btn" title="미리듣기" onclick="previewAudio('${e.id}')">▶</button>`:''}
+        <button class="icon-btn del" title="삭제" onclick="deleteEntry(${e.id})">✕</button>
       </div>
-    </div>
-  `).join('');
+    `;
+    list.appendChild(el);
+  });
 }
 
-// ─── JSON 렌더 ───
-function renderJSON() {
-  document.getElementById('jsonOutput').textContent = JSON.stringify(tracks, null, 2);
+function previewAudio(id){
+  const e=entries.find(x=>x.id==id);
+  if(!e||!e.audio)return;
+  const audio=new Audio(e.audio.url);
+  audio.play().catch(()=>alert('미리듣기를 지원하지 않는 환경입니다.'));
 }
 
-// ─── 복사 ───
-async function copyJSON() {
-  const text = JSON.stringify(tracks, null, 2);
-  try {
-    await navigator.clipboard.writeText(text);
-    showToast('📋 복사됨! GitHub에 붙여넣으세요');
-  } catch(e) {
-    showToast('⚠️ 복사 실패 — 직접 선택해서 복사하세요');
-  }
+function deleteEntry(id){
+  if(!confirm('삭제할까요?'))return;
+  entries=entries.filter(e=>e.id!==id);
+  save();renderEntries();renderJson();
 }
 
-// ─── 다운로드 ───
-function downloadJSON() {
-  const blob = new Blob([JSON.stringify(tracks, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'tracks.json';
+// ── JSON 생성 ──
+function buildJson(){
+  const out={};
+  entries.forEach(e=>{
+    out[e.type]={
+      group:e.group,
+      icon:e.icon,
+      label:e.label,
+      memo:e.memo||'',
+      audio:e.audio?{name:e.audio.name,path:`./assets/audio/${e.audio.name}`}:null,
+      material:e.material?{name:e.material.name,path:`./assets/materials/${e.material.name}`}:null,
+    };
+  });
+  return out;
+}
+
+function renderJson(){
+  const j=buildJson();
+  document.getElementById('json-output').textContent=JSON.stringify(j,null,2);
+}
+
+function copyJson(){
+  const txt=document.getElementById('json-output').textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const fb=document.getElementById('copy-feedback');
+    fb.classList.add('show');
+    setTimeout(()=>fb.classList.remove('show'),2000);
+  });
+}
+
+function downloadJson(){
+  const txt=document.getElementById('json-output').textContent;
+  const a=document.createElement('a');
+  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(txt);
+  a.download='mbti-assets.json';
   a.click();
-  showToast('⬇️ tracks.json 다운로드 시작!');
 }
 
-// ─── 불러오기 ───
-function importJSON() {
-  const raw = document.getElementById('importArea').value.trim();
-  if (!raw) return showToast('⚠️ JSON을 붙여넣어주세요!');
-  try {
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) throw new Error('배열이 아님');
-    tracks = parsed;
-    save();
-    renderList();
-    renderJSON();
-    document.getElementById('importArea').value = '';
-    showToast(`✅ ${tracks.length}곡 불러오기 완료!`);
-  } catch(e) {
-    showToast('❌ JSON 형식 오류 — 다시 확인해주세요');
-  }
-}
-
-// ─── 전체 삭제 ───
-function clearAll() {
-  if (!confirm('모든 노래를 삭제할까요? 되돌릴 수 없어요!')) return;
-  tracks = [];
-  save();
-  renderList();
-  renderJSON();
-  showToast('🗑️ 전체 삭제됨');
-}
-
-// ─── 저장/로드 ───
-function save() {
-  localStorage.setItem('bigcat_tracks', JSON.stringify(tracks));
-}
-
-// ─── 토스트 ───
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// ─── 시작 ───
-renderList();
-renderJSON();
+// 초기화
+renderTypeGrid();
+renderEntries();
+renderJson();
 </script>
 </body>
 </html>
