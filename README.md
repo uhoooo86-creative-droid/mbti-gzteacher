@@ -1,2 +1,1 @@
-mbti-gzteacher
 bigcat-mbti
