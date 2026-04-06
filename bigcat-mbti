@@ -1,0 +1,16 @@
+# 📁 bigcat-mbti/                     ← 레포지토리 이름
+│
+├── index.html                      ← bigcat-mbti-cards.html 이름 변경
+├── admin.html                      ← bigcat-mbti-admin.html 이름 변경  
+├── mbti-assets.json
+│
+└── assets/
+    ├── audio/
+    │   ├── INTJ-bgm.mp3
+    │   ├── INTP-bgm.mp3
+    │   └── ...
+    └── materials/
+        ├── INTJ-card.pdf
+        ├── INTP-card.pdf
+        └── ...
+Music is my life by Bigcat
