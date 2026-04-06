@@ -31,5 +31,38 @@
       "path": "./assets/audio/ENTP-bgm.mp3"
     },
     "material": null
+  },
+  "ESTP": {
+    "group": "SP",
+    "icon": "⚡",
+    "label": "액션형 교사",
+    "memo": "",
+    "audio": {
+      "name": "ESTP-bgm.mp3",
+      "path": "./assets/audio/ESTP-bgm.mp3"
+    },
+    "material": null
+  },
+  "INFP": {
+    "group": "NF",
+    "icon": "🎨",
+    "label": "감성형 교사",
+    "memo": "",
+    "audio": {
+      "name": "INFP-bgm.mp3",
+      "path": "./assets/audio/INFP-bgm.mp3"
+    },
+    "material": null
+  },
+  "ENFJ": {
+    "group": "NF",
+    "icon": "🤝",
+    "label": "리드형 교사",
+    "memo": "",
+    "audio": {
+      "name": "ENFJ-bgm.mp3",
+      "path": "./assets/audio/ENFJ-bgm.mp3"
+    },
+    "material": null
   }
 }
