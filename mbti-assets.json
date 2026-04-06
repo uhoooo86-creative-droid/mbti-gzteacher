@@ -68,7 +68,19 @@
     "icon": "📋",
     "label": "루틴형 교사",
     "memo": "",
-    "audio": null,
+    "audio": {
+  "ISTJ": {
+    "group": "SJ",
+    "icon": "📋",
+    "label": "루틴형 교사",
+    "memo": "Whisper and Say",
+    "audio": {
+      "name": "ISTJ-bgm.mp3",
+      "path": "./assets/audio/ISTJ-bgm.mp3"
+    },
+    "material": null
+  }
+},
     "material": null
   },
   "ISFJ": {
