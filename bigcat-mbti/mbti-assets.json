@@ -84,7 +84,10 @@
     "icon": "🤝",
     "label": "리드형 교사",
     "memo": "",
-    "audio": null,
+    "audio": {
+      "name": "외교관NF-Marching together(ENFJ).mp3",
+      "path": "./assets/audio/외교관NF-Marching together(ENFJ).mp3"
+    },
     "material": {
       "name": "ENFJ-card.pdf",
       "path": "./assets/materials/ENFJ-card.pdf"
