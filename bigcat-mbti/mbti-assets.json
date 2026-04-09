@@ -28,7 +28,7 @@
     "icon": "💡",
     "label": "창의형 교사",
     "memo": "",
-    "audio": { "name": "분석가NT-I'm Little Einstein(ENTP).mp3", "path": "./assets/audio/분석가NT-I'm Little Einstein(ENTP).mp3" },
+    "audio": { "name": "분석가NT-I am Little Einstein(ENTP).mp3", "path": "./assets/audio/분석가NT-I am Little Einstein(ENTP).mp3" },
     "material": { "name": "ENTP-card.pdf", "path": "./assets/materials/ENTP-card.pdf" }
   },
   "INFJ": {
